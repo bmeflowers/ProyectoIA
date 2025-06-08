@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import UserProfile
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -14,3 +15,8 @@ class CustomUserCreationForm(UserCreationForm):
 class CustomAuthenticationForm(forms.Form):
     username_or_email = forms.CharField(label='Usuario o Email')
     password = forms.CharField(widget=forms.PasswordInput)
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['nombre_completo', 'edad', 'biografia', 'foto', 'ocupacion', 'genero']

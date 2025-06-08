@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from .forms import CustomUserCreationForm, CustomAuthenticationForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -74,4 +74,22 @@ def signin(request):
                 'form': form,
                 'error': 'Datos inválidos.'
             })
-        
+
+@login_required
+def profile_view(request):
+    return render(request, 'profile.html', {
+        'profile': request.user.userprofile
+    })
+
+@login_required
+def edit_profile(request):
+    profile = request.user.userprofile
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = UserProfileForm(instance=profile)
+    return render(request, 'edit_profile.html', {'form': form})
+    

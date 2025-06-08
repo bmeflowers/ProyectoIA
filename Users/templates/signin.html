@@ -5,7 +5,7 @@
 <h1> ENTRA PARA TENER ACCESO </h1>
 {{error}}
 
-<form action="/signin/" method="post">
+<form action="/login/" method="post">
     {% csrf_token %}
     {{form.as_p}}
     <button>

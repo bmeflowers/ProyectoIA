@@ -13,7 +13,7 @@ def home (request):
 
 def signup(request):
     if request.method == 'GET':
-        return render(request, 'signup.html', {
+        return render(request, 'Users/signup.html', {
             'form': CustomUserCreationForm()
         })
     else:
@@ -22,20 +22,17 @@ def signup(request):
             try:
                 user = form.save()
                 login(request, user)
-                return redirect('tasks')
+                return redirect('activities:activities')
             except IntegrityError:
-                return render(request, 'signup.html', {
+                return render(request, 'Users/signup.html', {
                     'form': form,
                     'error': 'El nombre de usuario ya existe.'
                 })
         else:
-            return render(request, 'signup.html', {
+            return render(request, 'Users/signup.html', {
                 'form': form,
                 'error': 'Verifica los datos ingresados.'
             })
-
-def tasks (request):
-    return render (request, 'task.html')
 
 def signout(request):
     logout(request)
@@ -43,7 +40,7 @@ def signout(request):
 
 def signin(request):
     if request.method == 'GET':
-        return render(request, 'signin.html', {
+        return render(request, 'Users/signin.html', {
             'form': CustomAuthenticationForm()
         })
     else:
@@ -63,21 +60,21 @@ def signin(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('tasks')
+                return redirect('activities:activities')
             else:
-                return render(request, 'signin.html', {
+                return render(request, 'Users/signin.html', {
                     'form': form,
                     'error': 'Usuario o contraseña incorrectos.'
                 })
         else:
-            return render(request, 'signin.html', {
+            return render(request, 'Users/signin.html', {
                 'form': form,
                 'error': 'Datos inválidos.'
             })
 
 @login_required
 def profile_view(request):
-    return render(request, 'profile.html', {
+    return render(request, 'Users/profile.html', {
         'profile': request.user.userprofile
     })
 
@@ -91,5 +88,5 @@ def edit_profile(request):
             return redirect('profile')
     else:
         form = UserProfileForm(instance=profile)
-    return render(request, 'edit_profile.html', {'form': form})
+    return render(request, 'Users/edit_profile.html', {'form': form})
     

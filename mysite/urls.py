@@ -18,10 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from Users.views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('Users.urls')),  #URLs de la app Users
+    path('', home, name='home'),
+    path('users/', include('Users.urls')),  #URLs de la app Users
+    path('activities/', include('activities.urls', namespace='activities')) #URLs de la app activities
 ]
 
 if settings.DEBUG:

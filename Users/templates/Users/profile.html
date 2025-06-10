@@ -1,54 +1,50 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Perfil de Usuario</title>
-</head>
-<body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 40px;">
-  <div style="max-width: 600px; margin: 0 auto; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-    
-    <h2 style="text-align: center; color: #333; margin-bottom: 20px;">
-      Perfil de {{ profile.user.username }}
-    </h2>
+{% extends 'base.html' %}
 
-    {% if profile.foto %}
-      <div style="text-align: center; margin-bottom: 20px;">
-        <img src="{{ profile.foto.url }}" alt="Foto de perfil" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;">
-      </div>
-    {% endif %}
+{% block title %}Perfil de Usuario - SoulTrack{% endblock %}
 
-    <table style="width: 100%; border-collapse: collapse; font-size: 16px;">
-      <tr>
-        <td style="padding: 8px;"><strong>Nombre completo:</strong></td>
-        <td style="padding: 8px;">{{ profile.nombre_completo }}</td>
-      </tr>
-      <tr>
-        <td style="padding: 8px;"><strong>Edad:</strong></td>
-        <td style="padding: 8px;">{{ profile.edad }}</td>
-      </tr>
-      <tr>
-        <td style="padding: 8px;"><strong>Biografía:</strong></td>
-        <td style="padding: 8px;">{{ profile.biografia }}</td>
-      </tr>
-      <tr>
-        <td style="padding: 8px;"><strong>Ocupación:</strong></td>
-        <td style="padding: 8px;">{{ profile.ocupacion }}</td>
-      </tr>
-      <tr>
-        <td style="padding: 8px;"><strong>Género:</strong></td>
-        <td style="padding: 8px;">{{ profile.genero|capfirst }}</td>
-      </tr>
-    </table>
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Perfil de {{ profile.user.username }}</h2>
 
-    <div style="text-align: center; margin-top: 30px;">
-      <a href="{% url 'Users:edit_profile' %}" style="background-color: #007BFF; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;">
-        Editar perfil
-      </a>
-      <a href="{% url 'home' %}" style="background-color: #6c757d; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
-        Volver al inicio
-      </a>
+                {% if profile.foto %}
+                    <div class="text-center mb-4">
+                        <img src="{{ profile.foto.url }}" alt="Foto de perfil" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                    </div>
+                {% endif %}
+
+                <table class="table table-borderless">
+                    <tr>
+                        <th scope="row">Nombre completo:</th>
+                        <td>{{ profile.nombre_completo }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Edad:</th>
+                        <td>{{ profile.edad }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Biografía:</th>
+                        <td>{{ profile.biografia }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Ocupación:</th>
+                        <td>{{ profile.ocupacion }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Género:</th>
+                        <td>{{ profile.genero|capfirst }}</td>
+                    </tr>
+                </table>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'Users:edit_profile' %}" class="btn btn-primary me-2">Editar perfil</a>
+                    <a href="{% url 'home' %}" class="btn btn-secondary">Volver al inicio</a>
+                </div>
+            </div>
+        </div>
     </div>
-    
-  </div>
-</body>
-</html>
+</div>
+{% endblock %}
+

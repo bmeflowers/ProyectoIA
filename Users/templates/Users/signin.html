@@ -1,17 +1,34 @@
 {% extends 'base.html' %}
 
+{% block title %}Iniciar sesión - SoulTrack{% endblock %}
+
 {% block content %}
-<h1> Sign In </h1>
-<h1> ENTRA PARA TENER ACCESO </h1>
-{{error}}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h1 class="text-center">Iniciar sesión</h1>
+        <p class="text-center">Entra para acceder a SoulTrack</p>
 
-<form method="post" action="{% url 'Users:login' %}">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button>
-        Sign In
-    </button>
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
 
-</form>
+        <form method="post" action="{% url 'Users:login' %}">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+        </form>
 
+        <p class="text-center mt-3">
+            ¿No tienes una cuenta? <a href="{% url 'Users:signup' %}">Regístrate aquí</a>
+        </p>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'baseRU.html' %}
+
+{% block title %}Registrarse - SoulTrack{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="/static/css/auth.css"> 
+{% endblock %}
+
+{% block content %}
+<div class="login-page-container">
+
+    <!-- Imagen lateral izquierda -->
+    <div class="login-image-side"></div>
+
+    <!-- Contenedor del formulario -->
+    <div class="login-form-side">
+        <div class="login-form-wrapper" style="width: 100%; max-width: 500px;">
+
+            <h1 class="form-title">Registrate</h1>
+
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <form method="post" action="{% url 'Users:signup' %}">
+                {% csrf_token %}
+
+                <div style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">{{ form.username.label }}</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="text-danger small">{{ form.username.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">{{ form.email.label }}</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="text-danger small">{{ form.email.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">{{ form.first_name.label }}</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <div class="text-danger small">{{ form.first_name.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">{{ form.last_name.label }}</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <div class="text-danger small">{{ form.last_name.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">{{ form.password1.label }}</label>
+                        {{ form.password1 }}
+                        {% if form.password1.errors %}
+                            <div class="text-danger small">{{ form.password1.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">{{ form.password2.label }}</label>
+                        {{ form.password2 }}
+                        {% if form.password2.errors %}
+                            <div class="text-danger small">{{ form.password2.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <button type="submit" class="custom-login-btn">Registrarse</button>
+            </form>
+
+            <p class="form-privacy-text">
+                Al registrarte, aceptas nuestros
+                <a href="/terminos" class="terms-link">Términos de servicio</a> y
+                <a href="/privacidad" class="privacy-link">Política de privacidad</a>.
+            </p>
+
+            <p class="text-center mt-3" style="margin-top: 20px;">
+                ¿Ya tienes cuenta? <a href="{% url 'Users:login' %}">Inicia sesión</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

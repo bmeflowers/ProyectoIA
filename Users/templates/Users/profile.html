@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Perfil de Usuario - SoulTrack{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Perfil de {{ profile.user.username }}</h2>
+
+                {% if profile.foto %}
+                    <div class="text-center mb-4">
+                        <img src="{{ profile.foto.url }}" alt="Foto de perfil" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                    </div>
+                {% endif %}
+
+                <table class="table table-borderless">
+                    <tr>
+                        <th scope="row">Nombre completo:</th>
+                        <td>{{ profile.nombre_completo }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Edad:</th>
+                        <td>{{ profile.edad }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Biografía:</th>
+                        <td>{{ profile.biografia }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Ocupación:</th>
+                        <td>{{ profile.ocupacion }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Género:</th>
+                        <td>{{ profile.genero|capfirst }}</td>
+                    </tr>
+                </table>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'Users:edit_profile' %}" class="btn btn-primary me-2">Editar perfil</a>
+                    <a href="{% url 'home' %}" class="btn btn-secondary">Volver al inicio</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

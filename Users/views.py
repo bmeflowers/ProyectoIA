@@ -5,8 +5,6 @@ from django.db import IntegrityError
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
 
-
-
 # Create your views here.
 def home (request):
     return render(request, 'home.html')

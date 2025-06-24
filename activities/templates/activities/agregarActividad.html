@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Agregar Actividad - SoulTrack{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Agregar nueva actividad</h2>
+
+<form method="post" id="actividad-form">
+    {% csrf_token %}
+    <div class="mb-3">
+        {{ form.nombre.label_tag }} {{ form.nombre }}
+    </div>
+    <div class="mb-3">
+        {{ form.descripcion.label_tag }} {{ form.descripcion }}
+    </div>
+    <div class="mb-3">
+        {{ form.tipo.label_tag }} {{ form.tipo }}
+    </div>
+
+    <!-- Solo visible si es una tarea -->
+    <div class="mb-3" id="fecha-limite-div">
+        {{ form.fecha_limite.label_tag }} {{ form.fecha_limite }}
+    </div>
+
+    <!-- Solo visible si es un hábito -->
+    <div class="mb-3" id="hora-habito-div">
+        {{ form.hora_habito.label_tag }} {{ form.hora_habito }}
+    </div>
+
+    <!-- Días de la semana (solo para hábitos) -->
+    <div class="mb-3" id="dias-semana-div">
+        <label for="dias_semana">Días de repetición:</label><br>
+        {% for dia in dias_semana %}
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="dias_semana" value="{{ dia }}" id="{{ dia|lower }}">
+            <label class="form-check-label" for="{{ dia|lower }}">{{ dia }}</label>
+        </div>
+        {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a href="{% url 'activities:activities' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+
+<script>
+    function toggleCampos() {
+        const tipo = document.getElementById('id_tipo').value;
+        const fechaLimite = document.getElementById('fecha-limite-div');
+        const horaHabito = document.getElementById('hora-habito-div');
+        const diasSemana = document.getElementById('dias-semana-div');
+
+        if (tipo === 'tarea') {
+            fechaLimite.style.display = 'block';
+            horaHabito.style.display = 'none';
+            diasSemana.style.display = 'none';
+        } else if (tipo === 'habito') {
+            fechaLimite.style.display = 'none';
+            horaHabito.style.display = 'block';
+            diasSemana.style.display = 'block';
+        } else {
+            fechaLimite.style.display = 'none';
+            horaHabito.style.display = 'none';
+            diasSemana.style.display = 'none';
+        }
+    }
+
+    // Ejecutar al cargar la página y cuando se cambia el tipo
+    document.addEventListener('DOMContentLoaded', toggleCampos);
+    document.getElementById('id_tipo').addEventListener('change', toggleCampos);
+</script>
+{% endblock %}
+
+

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Registrar Hábito - SoulTrack{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Registrar hábito: <strong>{{ habito.nombre }}</strong></h2>
+<p><strong>Fecha:</strong> {{ fecha }}</p>
+
+<form method="post" class="mb-3">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Guardar registro</button>
+    <a href="{% url 'activities:activities' %}" class="btn btn-secondary">Volver</a>
+</form>
+{% endblock %}

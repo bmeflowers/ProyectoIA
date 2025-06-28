@@ -116,12 +116,145 @@ html, body {
 .custom-logout-btn {
     background-color: transparent !important;
     color: #176B87 !important;
-    border: 20px solid #176B87 !important;
+    border: 2px solid #176B87 !important; /* ← Arreglado */
     padding: 8px 18px !important;
     border-radius: 20px !important;
     font-size: 16px !important;
     font-weight: 500 !important;
     transition: all 0.2s ease;
+}
+
+.navbar-nav .nav-item form .custom-logout-btn {
+    border: 2px solid #176B87 !important;
+}
+
+/* Sidebar vertical fijo */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 100vh;
+    background-color: #649292;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 15px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Icono arriba */
+.sidebar-icon {
+    margin-top: 20px;
+     width: 50px;
+    height: 50px;
+}
+
+.sidebar-brand {
+    font-family: 'Jua', sans-serif;
+    font-size: 14px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.sidebar-icons-only {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 70px;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-icons-only .nav-link {
+    width: 50px;
+    height: 50px;
+    color: #ffffff;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    padding: 0;
+}
+
+.sidebar-icons-only .nav-link.active {
+    background-color: #2B5E7C;
+    border-radius: 20px;
+}
+
+.sidebar-icons-only .nav-link.active .nav-indicator {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    width: 20px;
+    height: 2px;
+    background-color: #ffffff;
+    border-radius: 2px;
+}
+
+/* Navegación vertical */
+.sidebar .nav {
+    width: 100%;
+}
+
+.sidebar-logout {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.logout-icon-btn {
+    margin-top: 10px;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 20px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* Para que el contenido principal no quede debajo de la sidebar */
+.content-with-sidebar {
+    margin-left: 180px;
+    padding: 20px;
+}
+
+/* Ajustes para menú horizontal (lo tienes en tu CSS original) */
+.custom-navbar {
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    padding: 15px 30px;
+    position: relative;
+    z-index: 1000;
+}
+
+.custom-navbar .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+.custom-brand {
+    color: #176B87 !important;
+    font-family: 'Jua', sans-serif !important;
+    font-size: 28px !important;
+    font-weight: bold !important;
+    text-decoration: none !important;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    z-index: 1001;
 }
 
 .custom-logout-btn:hover {

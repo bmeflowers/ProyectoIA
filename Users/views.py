@@ -23,7 +23,7 @@ def signup(request):
             try:
                 user = form.save()
                 login(request, user)
-                return redirect('activities:activities')
+                return redirect('dashboard')
             except IntegrityError:
                 return render(request, 'Users/signup.html', {
                     'form': form,
@@ -61,7 +61,7 @@ def signin(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('activities:activities')
+                return redirect('dashboard')  # Cambiado a 'dashboard'
             else:
                 return render(request, 'Users/signin.html', {
                     'form': form,
@@ -72,6 +72,10 @@ def signin(request):
                 'form': form,
                 'error': 'Datos inválidos.'
             })
+            
+@login_required
+def dashboard(request):
+    return render(request, 'dashboard.html')
 
 @login_required
 def profile_view(request):

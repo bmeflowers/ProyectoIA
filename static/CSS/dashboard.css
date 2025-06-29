@@ -1,0 +1,167 @@
+/* Estilos generales */
+.dashboard-container {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    max-width: 1200px;
+    margin: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.date {
+    font-size: 1rem;
+    color: #7f8c8d;
+    margin: 0;
+}
+
+.user-button {
+    background-color: #649292;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-left: auto;
+}
+
+.user {
+    font-size: 1rem;
+    color: #7f8c8d;
+}
+
+.welcome-section {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.welcome-section h2 {
+    color: #3498db;
+    font-size: 1.8rem;
+}
+
+.welcome-section p {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+}
+
+.username {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* Sección de hábitos y tareas */
+.dashboard-content {
+    display: flex;
+    gap: 20px;
+}
+
+.habits-section, .tasks-section {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.habits-section h3, .tasks-section h3 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Lista de hábitos en HORIZONTAL */
+.habits-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.habits-list li {
+    padding: 12px 20px;
+    background-color: #ecf0f1;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    margin-bottom: 0;
+    min-width: 100px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.habits-list li:hover {
+    background-color: #d6eaf8;
+    transform: translateY(-3px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo especial para el botón "+" */
+.add-habit a {
+    display: block;             /* Ocupa todo el espacio del li */
+    text-align: center;
+    color: #3498db;
+    text-decoration: none;      /* Elimina el subrayado */
+    font-size: 1.5rem;
+    padding: 12px 20px;         /* Mismo padding que los otros li */
+}
+
+.add-habit:hover {
+    background-color: #d6eaf8;  /* Efecto hover consistente */
+}
+
+/* Lista de tareas (vertical) */
+.tasks-list {
+    list-style: none;
+    padding: 0;
+}
+
+.tasks-list li {
+    padding: 12px;
+    margin-bottom: 8px;
+    background-color: #ecf0f1;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.tasks-list li:hover {
+    background-color: #d6eaf8;
+    transform: translateX(5px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard-content {
+        flex-direction: column;
+    }
+    
+    .habits-list {
+        flex-direction: row;
+        overflow-x: auto;   
+        padding-bottom: 10px; 
+    }
+    
+    .habits-list li {
+        flex-shrink: 0; 
+    }
+}

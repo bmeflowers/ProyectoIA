@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% load l10n %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/dashboard.css">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <header class="dashboard-header">
+        <h1>Dashboard</h1>
+        <p class="date">{% localize on %}{{ today|date:"d F Y" }}{% endlocalize %}</p>
+        <a href="#" class="user-button">{{ user.username }}</a>
+    </header>
+
+    <section class="welcome-section">
+        <h2>Hola <span class="username">{{ user.username }}</span>!</h2>
+        <p>Vamos a darlo todo... ¿Preparado?</p>
+    </section>
+
+    <div class="dashboard-content">
+        <div class="habits-section">
+            <div class="habits-header d-flex justify-content-between align-items-center mb-3">
+                <h3 class="mb-0">Hábitos</h3>
+                <button class="btn btn-sm btn-primary" type="button">Informe</button>
+            </div>
+            <ul class="habits-list">
+                {% for habito in habitos %}
+                    <li>{{ habito.nombre }}</li>
+                {% empty %}
+                    <li>No tienes hábitos registrados.</li>
+                {% endfor %}
+                <li class="add-habit">
+                    <a href="{% url 'activities:agregar_actividad' %}">+</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tasks-section">
+            <h3>Tareas</h3>
+            <ul class="tasks-list">
+                <li>Correr 30 min...</li>
+                <li>Estudiar lo que ...</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

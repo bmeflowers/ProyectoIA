@@ -12,7 +12,6 @@ html, body {
     flex-direction: column; 
 }
 
-/* El contenido principal debe crecer para empujar el footer hacia abajo */
 .container.mt-4 { 
     flex-grow: 1;
 }
@@ -116,7 +115,7 @@ html, body {
 .custom-logout-btn {
     background-color: transparent !important;
     color: #176B87 !important;
-    border: 2px solid #176B87 !important; /* ← Arreglado */
+    border: 2px solid #176B87 !important;
     padding: 8px 18px !important;
     border-radius: 20px !important;
     font-size: 16px !important;
@@ -146,7 +145,7 @@ html, body {
 /* Icono arriba */
 .sidebar-icon {
     margin-top: 20px;
-     width: 50px;
+    width: 50px;
     height: 50px;
 }
 
@@ -220,13 +219,12 @@ html, body {
     cursor: pointer;
 }
 
-/* Para que el contenido principal no quede debajo de la sidebar */
+
 .content-with-sidebar {
-    margin-left: 180px;
-    padding: 20px;
+    margin-left: 80px;
+    padding: 0;
 }
 
-/* Ajustes para menú horizontal (lo tienes en tu CSS original) */
 .custom-navbar {
     background-color: #ffffff !important;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);

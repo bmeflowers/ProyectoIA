@@ -21,7 +21,7 @@
         <ul class="nav flex-column align-items-center gap-4">
             <!-- Íconos de navegación -->
             <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
+                <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
                     <i class="fa-solid fa-house"></i>
                     <span class="nav-indicator"></span>
                 </a>

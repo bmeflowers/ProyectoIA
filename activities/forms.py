@@ -6,9 +6,6 @@ class ActividadForm(forms.ModelForm):
         model = Actividad
         fields = ['nombre', 'descripcion', 'tipo', 'fecha_limite', 'hora_habito']
 
-        
-
-
 class RegistroHabitoForm(forms.ModelForm):
     class Meta:
         model = RegistroHabito

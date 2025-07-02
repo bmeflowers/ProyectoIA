@@ -13,13 +13,19 @@
     <header class="dashboard-header">
         <h1>Dashboard</h1>
         <p class="date">{% localize on %}{{ today|date:"d F Y" }}{% endlocalize %}</p>
-        <a href="#" class="user-button">{{ user.username }}</a>
+        <a href="{% url 'Users:profile' %}" class="user-button">{{ user.username }}</a>
     </header>
 
-    <section class="welcome-section">
-        <h2>Hola <span class="username">{{ user.username }}</span>!</h2>
-        <p>Vamos a darlo todo... ¿Preparado?</p>
-    </section>
+    <div class="welcome-wrapper">
+        <section class="welcome-section">
+            <h2>Hola <span class="username">{{ user.username }}</span>!</h2>
+            <p>Vamos a darlo todo... ¿Preparado?</p>
+        </section>
+
+        <div class="welcome-image">
+            <img src="/static/images/SoulFn.png" alt="Imagen de bienvenida">
+        </div>
+    </div>
 
     <div class="dashboard-content">
         <div class="habits-section">

@@ -2,12 +2,21 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Actividad, RegistroHabito
 from .forms import ActividadForm, RegistroHabitoForm
+from django.utils import timezone
 from datetime import date
 
 @login_required
 def activities(request):
+    today = timezone.now()
     actividades = Actividad.objects.filter(user=request.user).order_by('-fecha_creacion')
-    return render(request, 'activities/activities.html', {'actividades': actividades})
+    habitos = actividades.filter(tipo='habito')
+    tareas = actividades.filter(tipo='tarea')
+    
+    return render(request, 'activities/activities.html', {
+        'today': today,
+        'habitos': habitos,
+        'tareas': tareas
+    })
 
 @login_required
 def agregar_actividad(request):

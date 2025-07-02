@@ -2,14 +2,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from Users.views import home, signin  # Importaciones desde Users.views
-from . import views  # Importación crucial que te faltaba
+from Users.views import home, signin
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home, name='home'),  # Ruta principal (home)
-    path('dashboard/', views.dashboard, name='dashboard'),  # Ahora funcionará
-    path('login/', signin, name='login'),  # Ruta para login
+    path('', home, name='home'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('login/', signin, name='login'),
     path('users/', include('Users.urls', namespace='users')),
     path('activities/', include('activities.urls', namespace='activities')),
 ]

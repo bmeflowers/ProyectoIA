@@ -32,7 +32,7 @@ class Actividad(models.Model):
 
 
 class RegistroHabito(models.Model):
-    habito = models.ForeignKey(Actividad, on_delete=models.CASCADE)
+    habito = models.ForeignKey(Actividad, on_delete=models.CASCADE, related_name='registros')
     fecha = models.DateField()
     estado = models.CharField(max_length=10, choices=Actividad.ESTADO_CHOICES)
 

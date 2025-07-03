@@ -11,9 +11,17 @@
 {% block content %}
 <div class="dashboard-container">
     <header class="dashboard-header">
-        <h1>Dashboard</h1>
-        <p class="date">{% localize on %}{{ today|date:"d F Y" }}{% endlocalize %}</p>
-        <a href="{% url 'Users:profile' %}" class="user-button">{{ user.username }}</a>
+        <div class="title-date">
+            <h1>Dashboard</h1>
+            <p class="date">{% localize on %}{{ today|date:"d F Y" }}{% endlocalize %}</p>
+        </div>
+
+        <div class="user-info">
+            {% if user.userprofile.foto %}
+                <img src="{{ user.userprofile.foto.url }}" alt="Foto de perfil" class="user-photo-header">
+            {% endif %}
+            <a href="{% url 'Users:profile' %}" class="user-button">{{ user.username }}</a>
+        </div>
     </header>
 
     <div class="welcome-wrapper">
@@ -48,8 +56,11 @@
         <div class="tasks-section">
             <h3>Tareas</h3>
             <ul class="tasks-list">
-                <li>Correr 30 min...</li>
-                <li>Estudiar lo que ...</li>
+                {% for tarea in tareas %}
+                    <li>{{ tarea.nombre }}</li>
+                {% empty %}
+                    <li>No tienes tareas registradas.</li>
+                {% endfor %}
             </ul>
         </div>
     </div>

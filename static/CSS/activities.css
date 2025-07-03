@@ -11,28 +11,47 @@
 .dashboard-header {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 15px;
-    margin-bottom: 30px;
+    padding: 10px;
+    padding-bottom: 20px;
 }
 
 .dashboard-header h1 {
     font-size: 2.5rem;
-    color: #000;
+    color: #000000;
     margin: 0;
 }
 
-.date {
-    padding-top: 10px;
-    font-size: 1rem;
-    color: #000;
+.user-photo-header {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.title-date {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.title-date h1 {
     margin: 0;
+}
+
+.title-date .date {
+    margin: 0;
+    font-size: 1rem;
+    color: #000000;
+    padding-top: 8px;
+    font-weight: 400;
 }
 
 .user-button {
     background-color: #649292;
     color: white;
-    padding: 8px 30px;
+    padding: 12px 40px;
     border-radius: 10px;
     text-decoration: none;
     font-weight: 500;
@@ -41,7 +60,7 @@
     transition: all 0.3s ease;
 }
 
-.user-button:hover {
+.user-button:hover{
     background-color: #435858;
 }
 
@@ -49,7 +68,6 @@
     font-size: 1rem;
     color: #7f8c8d;
 }
-
 
 /* === Layout de secciones === */
 .dashboard-content {

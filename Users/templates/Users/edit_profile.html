@@ -2,33 +2,39 @@
 
 {% block title %}Editar Perfil - SoulTrack{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/profileEDIT.css">
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h2 class="text-center mb-4">Editar Perfil</h2>
+        <div class="card-body">
+            <h2 class="text-center mb-4">Editar Perfil</h2>
 
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {% for field in form %}
-                        <div class="mb-3">
-                            <label class="form-label">{{ field.label }}</label>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label">{{ field.label }}</label>
+
+                        {% if field.name == 'foto' %}
                             {{ field }}
-                            {% if field.errors %}
-                                <div class="text-danger small">{{ field.errors|join:", " }}</div>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-success">Guardar</button>
-                    </div>
-                </form>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
 
-                <div class="text-center mt-3">
-                    <a href="{% url 'Users:profile' %}" class="text-decoration-none text-primary">← Volver al perfil</a>
+                        {% if field.errors %}
+                            <div class="text-danger small">{{ field.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="d-flex justify-content-center gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a href="{% url 'Users:profile' %}" class="btn btn-secondary">Descartar</a>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>

@@ -10,9 +10,17 @@
 {% block content %}
 <div class="dashboard-container">
     <header class="dashboard-header">
-        <h1>Hábitos y Tareas</h1>
-        <p class="date">{% localize on %}{{ today|date:"d F Y" }}{% endlocalize %}</p>
-        <a href="{% url 'Users:profile' %}" class="user-button">{{ user.username }}</a>
+        <div class="title-date">
+            <h1>Hábitos y tareas</h1>
+            <p class="date">{% localize on %}{{ today|date:"d F Y" }}{% endlocalize %}</p>
+        </div>
+
+        <div class="user-info">
+            {% if user.userprofile.foto %}
+                <img src="{{ user.userprofile.foto.url }}" alt="Foto de perfil" class="user-photo-header">
+            {% endif %}
+            <a href="{% url 'Users:profile' %}" class="user-button">{{ user.username }}</a>
+        </div>
     </header>
 
     <div class="dashboard-content">
@@ -30,13 +38,25 @@
                         <div class="habit-info">
                             <strong>{{ actividad.nombre }}</strong><br>
                             <small>{{ actividad.hora_habito }}</small><br>
-                            <small>Días: {{ actividad.dias_semana|join:", " }}</small>
+                            <small>Días registrados: {{ actividad.total_registros }}</small>
                         </div>
                         <div class="habit-actions">
-                            <a href="{% url 'activities:registrar_habito' actividad.id %}" class="btn btn-registrar btn-sm mb-2">Registrar hoy</a>
-                            <a href="{% url 'activities:eliminar_actividad' actividad.id %}" class="btn btn-eliminar btn-sm">Eliminar</a>
+                            {% if actividad.registrado_hoy %}
+                                <button class="btn btn-success btn-sm"> Registrado</button>
+                            {% else %}
+                                <a href="{% url 'activities:registrar_habito' actividad.id %}" 
+                                class="btn btn-primary btn-sm">
+                                Registrar hoy
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'activities:eliminar_actividad' actividad.id %}" 
+                            class="btn btn-danger btn-sm">
+                            Eliminar
+                            </a>
                         </div>
                     </li>
+                    <!--<small>Debug: registrado_hoy={{ actividad.registrado_hoy }}, count={{ actividad.total_registros }}</small>
+</li>!-->
                     {% endfor %}
                 {% else %}
                     <li class="text-muted">No tienes hábitos registrados.</li>
@@ -64,7 +84,7 @@
                         </div>
                         <div class="task-actions">
                             <a href="{% url 'activities:cambiar_estado' actividad.id %}" class="btn btn-registrar btn-sm mb-2">
-                                {% if actividad.estado == 'pendiente' %}Completado{% else %}Pendiente{% endif %}
+                                {% if actividad.estado == 'completado' %}Completado{% else %}Registrar{% endif %}
                             </a>
                             <a href="{% url 'activities:eliminar_actividad' actividad.id %}" class="btn btn-eliminar btn-sm">Eliminar</a>
                         </div>

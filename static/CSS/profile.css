@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&display=swap');
+
+/* General */
+body {
+    justify-content: center;
+    background-color: #fff;
+    font-family: 'Josefin Sans', sans-serif;
+    max-width: 1200px;
+}
+
+/* Contenedor principal */
+.card {
+    display: flex;
+    align-items: center;
+    border: none;
+    padding: 20px;
+}
+
+/* Título */
+.card h2 {
+    font-size: 2rem;
+    color: #396161;
+    font-weight: 700;
+}
+
+/* Tabla */
+.table th {
+    width: 40%;
+    color: #396161;
+    text-align: right;
+    font-size: 1.2rem;
+    font-weight: 700;
+    vertical-align: middle;
+}
+
+.table td {
+    color: #444;
+}
+
+/* Imagen de perfil */
+img.rounded-circle {
+    border: 3px solid #649292;
+    padding: 3px;
+}
+
+/* Botones */
+.btn-primary {
+    background-color: #396161;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+}
+
+.btn-primary:hover {
+    background-color: rgb(44, 61, 61);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+}
+
+.btn-secondary:hover {
+    background-color: #4e5358;
+}
+
+/* Centrado general */
+.row {
+    margin: 0;
+    width: 100%;
+}

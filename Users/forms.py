@@ -16,7 +16,7 @@ class CustomUserCreationForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.update({
-                'class': 'form-control'  # 👈 añade tu clase aquí
+                'class': 'form-control'
             })
 
 class CustomAuthenticationForm(forms.Form):
@@ -26,4 +26,4 @@ class CustomAuthenticationForm(forms.Form):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['nombre_completo', 'edad', 'biografia', 'foto', 'ocupacion', 'genero']
+        fields = ['nombre_completo', 'edad', 'foto', 'ocupacion', 'genero']

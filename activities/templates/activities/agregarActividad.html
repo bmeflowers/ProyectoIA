@@ -1,45 +1,54 @@
 {% extends 'base.html' %}
 {% block title %}Agregar Actividad - SoulTrack{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/habitsforms.css">
+{% endblock %}
+
 {% block content %}
-<h2 class="mb-4">Agregar nueva actividad</h2>
+<div class="dashboard-container">
 
-<form method="post" id="actividad-form">
-    {% csrf_token %}
-    <div class="mb-3">
-        {{ form.nombre.label_tag }} {{ form.nombre }}
-    </div>
-    <div class="mb-3">
-        {{ form.descripcion.label_tag }} {{ form.descripcion }}
-    </div>
-    <div class="mb-3">
-        {{ form.tipo.label_tag }} {{ form.tipo }}
-    </div>
+    <h2 class="mb-4">Agregar nueva actividad</h2>
 
-    <!-- Solo visible si es una tarea -->
-    <div class="mb-3" id="fecha-limite-div">
-        {{ form.fecha_limite.label_tag }} {{ form.fecha_limite }}
-    </div>
-
-    <!-- Solo visible si es un hábito -->
-    <div class="mb-3" id="hora-habito-div">
-        {{ form.hora_habito.label_tag }} {{ form.hora_habito }}
-    </div>
-
-    <!-- Días de la semana (solo para hábitos) -->
-    <div class="mb-3" id="dias-semana-div">
-        <label for="dias_semana">Días de repetición:</label><br>
-        {% for dia in dias_semana %}
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" name="dias_semana" value="{{ dia }}" id="{{ dia|lower }}">
-            <label class="form-check-label" for="{{ dia|lower }}">{{ dia }}</label>
+    <form method="post" id="actividad-form">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.nombre.label_tag }} {{ form.nombre }}
         </div>
-        {% endfor %}
-    </div>
+        <div class="mb-3">
+        {{ form.descripcion.label_tag }}
+        <br>
+        {{ form.descripcion }}
+        </div>
+        <div class="mb-3">
+            {{ form.tipo.label_tag }} {{ form.tipo }}
+        </div>
 
-    <button type="submit" class="btn btn-success">Guardar</button>
-    <a href="{% url 'activities:activities' %}" class="btn btn-secondary">Cancelar</a>
-</form>
+        <!-- Solo visible si es una tarea -->
+        <div class="mb-3" id="fecha-limite-div">
+            {{ form.fecha_limite.label_tag }} {{ form.fecha_limite }}
+        </div>
+
+        <!-- Solo visible si es un hábito -->
+        <div class="mb-3" id="hora-habito-div">
+            {{ form.hora_habito.label_tag }} {{ form.hora_habito }}
+        </div>
+
+        <!-- Días de la semana (solo para hábitos) -->
+        <div class="mb-3" id="dias-semana-div">
+            <label for="dias_semana">Días a repetir:</label><br>
+            {% for dia in dias_semana %}
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="dias_semana" value="{{ dia }}" id="{{ dia|lower }}">
+                <label class="form-check-label" for="{{ dia|lower }}">{{ dia }}</label>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{% url 'activities:activities' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
 
 <script>
     function toggleCampos() {
@@ -63,10 +72,7 @@
         }
     }
 
-    // Ejecutar al cargar la página y cuando se cambia el tipo
     document.addEventListener('DOMContentLoaded', toggleCampos);
     document.getElementById('id_tipo').addEventListener('change', toggleCampos);
 </script>
 {% endblock %}
-
-

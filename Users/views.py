@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
-
+from django.utils import timezone
 
 
 # Create your views here.
@@ -80,7 +80,8 @@ def dashboard(request):
 @login_required
 def profile_view(request):
     return render(request, 'Users/profile.html', {
-        'profile': request.user.userprofile
+        'profile': request.user.userprofile,
+        'today': timezone.now().date(),  # <-- esto permite que se muestre la fecha
     })
 
 @login_required

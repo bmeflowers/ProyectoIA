@@ -1,0 +1,134 @@
+#chatbot-button {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    z-index: 999;
+}
+
+#chatbot-button button {
+    background-color: #2B5E7C;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#chatbot-button button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(42, 111, 151, 0.5);
+}
+
+/* Ventana del chatbot (cerrada por defecto) */
+#chat-window {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 350px;
+    height: 430px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(100px);
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+/* Ventana abierta con animación de rebote */
+#chat-window.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    animation: bounceIn 0.4s ease;
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+    80% {
+        transform: translateY(5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Encabezado */
+.chat-header {
+    padding: 10px;
+    background-color: #2B5E7C;
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    text-align: center;
+    font-weight: 500;
+    position: relative;
+}
+
+.chat-header .close-btn {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    cursor: pointer;
+}
+
+/* Área de mensajes */
+#chat-messages {
+    padding: 10px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+/* Entrada de mensaje */
+.chat-input-area {
+    padding: 10px;
+    background: #FFFFFF;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 10px 45px 10px 15px;
+    border-radius: 25px;
+    border: none;
+    background: #D9D9D9;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* Botón de enviar dentro del input */
+.input-wrapper button {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 35px;
+    background: white;
+    border: 2px solid #464141;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+}

@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@300;400&family=Jua&display=swap');
+
 /* === Estilos generales === */
 .dashboard-container {
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family: 'Jost', Arial, sans-serif;
     max-width: 1200px;
     margin: 30px;
     padding-left: 50px;
@@ -17,16 +19,19 @@
     padding-bottom: 20px;
 }
 
-.dashboard-header h1 {
+.dashboard-header h1 {    
+    font-family: 'Hind Vadodara', sans-serif;
     font-size: 2.5rem;
     color: #000000;
     margin: 0;
+    font-weight: 700;
 }
 
 .user-photo-header {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    border: 2px solid #649292;
     object-fit: cover;
 }
 
@@ -44,7 +49,6 @@
     margin: 0;
     font-size: 1rem;
     color: #000000;
-    padding-top: 8px;
     font-weight: 400;
 }
 
@@ -67,6 +71,12 @@
 .user {
     font-size: 1rem;
     color: #7f8c8d;
+}
+
+.user-info a {
+    text-decoration: none;
+    outline: none;
+    border: none;
 }
 
 /* === Layout de secciones === */

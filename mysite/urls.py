@@ -4,8 +4,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from Users.views import home, signin
 from . import views
+from django.urls import path
 
 urlpatterns = [
+    path("api/chatbot/", views.chatbot_api, name="chatbot_api"),
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('dashboard/', views.dashboard, name='dashboard'),

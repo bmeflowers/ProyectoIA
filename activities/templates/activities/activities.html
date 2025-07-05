@@ -5,19 +5,22 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/activities.css">
+<link rel="stylesheet" href="/static/css/SeeleBot.css">
 {% endblock %}
 
 {% block content %}
 <div class="dashboard-container">
     <header class="dashboard-header">
         <div class="title-date">
-            <h1>Hábitos y tareas</h1>
+            <h1>Hábitos y Tareas</h1>
             <p class="date">{% localize on %}{{ today|date:"d F Y" }}{% endlocalize %}</p>
         </div>
 
         <div class="user-info">
             {% if user.userprofile.foto %}
-                <img src="{{ user.userprofile.foto.url }}" alt="Foto de perfil" class="user-photo-header">
+                <a href="{% url 'Users:profile' %}">
+                    <img src="{{ user.userprofile.foto.url }}" alt="Foto de perfil" class="user-photo-header">
+                </a>
             {% endif %}
             <a href="{% url 'Users:profile' %}" class="user-button">{{ user.username }}</a>
         </div>
@@ -97,4 +100,6 @@
         </div>
     </div>
 </div>
+
+{% include "SeeleBot.html" %}
 {% endblock %}

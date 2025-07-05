@@ -6,6 +6,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/dashboard.css">
+<link rel="stylesheet" href="/static/css/SeeleBot.css">
 {% endblock %}
 
 {% block content %}
@@ -18,7 +19,9 @@
 
         <div class="user-info">
             {% if user.userprofile.foto %}
-                <img src="{{ user.userprofile.foto.url }}" alt="Foto de perfil" class="user-photo-header">
+                <a href="{% url 'Users:profile' %}">
+                    <img src="{{ user.userprofile.foto.url }}" alt="Foto de perfil" class="user-photo-header">
+                </a>
             {% endif %}
             <a href="{% url 'Users:profile' %}" class="user-button">{{ user.username }}</a>
         </div>
@@ -65,4 +68,6 @@
         </div>
     </div>
 </div>
+
+{% include "SeeleBot.html" %}
 {% endblock %}

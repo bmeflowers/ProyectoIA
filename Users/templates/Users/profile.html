@@ -1,54 +1,77 @@
 {% extends 'base.html' %}
 
+{% load l10n %}
+
 {% block title %}Perfil de Usuario - SoulTrack{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/profile.css">
+<link rel="stylesheet" href="/static/css/SeeleBot.css">
 {% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
-        <div class="card">
-            <div class="card-body">
-                <h2 class="text-center mb-4">Perfil de {{ profile.user.username }}</h2>
 
-                {% if profile.foto %}
-                    <div class="text-center mb-4">
-                        <img src="{{ profile.foto.url }}" alt="Foto de perfil" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+<div class="dashboard-container">
+    <header class="dashboard-header">
+        <div class="title-date">
+            <h1>Perfil de {{ profile.user.username }}</h1>
+            <p class="date">{% localize on %}{{ today|date:"d F Y" }}{% endlocalize %}</p>
+        </div>
+
+        <div class="user-info">
+            {% if user.userprofile.foto %}
+                <a href="{% url 'Users:profile' %}">
+                    <img src="{{ user.userprofile.foto.url }}" alt="Foto de perfil" class="user-photo-header">
+                </a>
+            {% endif %}
+            <a href="{% url 'Users:profile' %}" class="user-button">{{ user.username }}</a>
+        </div>
+    </header>
+
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card profile-card">
+                <div class="card-body">
+                    <div class="profile-row">
+                        <!-- Imagen del usuario -->
+                        <div class="profile-img-container">
+                            {% if profile.foto %}
+                                <img src="{{ profile.foto.url }}" alt="Foto de perfil" class="profile-photo-square">
+                            {% endif %}
+                        </div>
+
+                        <!-- Información del usuario -->
+                        <div class="profile-info">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <th scope="row">Nombre:</th>
+                                    <td>{{ profile.nombre_completo }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Edad:</th>
+                                    <td>{{ profile.edad }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Ocupación:</th>
+                                    <td>{{ profile.ocupacion }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Género:</th>
+                                    <td>{{ profile.genero|capfirst }}</td>
+                                </tr>
+                            </table>
+
+                            <div class="button-group">
+                                <a href="{% url 'Users:edit_profile' %}" class="btn btn-primary">Editar perfil</a>
+                                <a href="{% url 'dashboard' %}" class="btn btn-secondary">Volver al dashboard</a>
+                            </div>
+                        </div>
                     </div>
-                {% endif %}
-
-                <table class="table table-borderless">
-                    <tr>
-                        <th scope="row">Nombre:</th>
-                        <td>{{ profile.nombre_completo }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Edad:</th>
-                        <td>{{ profile.edad }}</td>
-                    </tr>
-                    <!--<tr>
-                        <th scope="row">Biografía:</th>
-                        <td>{{ profile.biografia }}</td>
-                    </tr>!-->
-                    <tr>
-                        <th scope="row">Ocupación:</th>
-                        <td>{{ profile.ocupacion }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Género:</th>
-                        <td>{{ profile.genero|capfirst }}</td>
-                    </tr>
-                </table>
-
-                <div class="text-center mt-4">
-                    <a href="{% url 'Users:edit_profile' %}" class="btn btn-primary me-2">Editar perfil</a>
-                    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Volver al dashboard</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
 
+{% include "SeeleBot.html" %}
+{% endblock %}

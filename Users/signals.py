@@ -10,7 +10,6 @@ def create_user_profile(sender, instance, created, **kwargs):
             user=instance,
             nombre_completo=f"{instance.first_name} {instance.last_name}",
             edad=0,
-            biografia='',
             ocupacion='',
             genero='otro'
         )

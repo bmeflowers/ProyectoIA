@@ -1,0 +1,72 @@
+<!-- Botón flotante del chatbot -->
+<div id="chatbot-button">
+    <button onclick="toggleChatWindow()">💬</button>
+</div>
+
+<!-- Ventana del chatbot -->
+<div id="chat-window">
+    <div class="chat-header">
+        <span>SeeleBot</span>
+        <span class="close-btn" onclick="toggleChatWindow()">
+            <svg width="30px" height="30px" stroke-width="1.5" viewBox="0 0 24 24" fill="none"
+                 xmlns="http://www.w3.org/2000/svg" color="#FFFFFF">
+                <path d="M6.75827 17.2426L12.0009 12M17.2435 6.75736L12.0009 12M12.0009 12L6.75827 6.75736M12.0009 12L17.2435 17.2426"
+                      stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                </path>
+            </svg>
+        </span>
+    </div>
+    <div id="chat-messages"></div>
+
+    <div class="chat-input-area">
+        <div class="input-wrapper">
+            <input type="text" id="chat-input" placeholder="Consulta..." />
+            <button onclick="enviarMensaje()" id="send-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" stroke-width="2" fill="none"
+                     xmlns="http://www.w3.org/2000/svg" color="#464141">
+                    <path d="M22.1525 3.55321L11.1772 21.0044L9.50686 12.4078L2.00002 7.89795L22.1525 3.55321Z"
+                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9.45557 12.4436L22.1524 3.55321"
+                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleChatWindow() {
+    const chatWindow = document.getElementById("chat-window");
+    chatWindow.classList.toggle("open");
+}
+
+function enviarMensaje() {
+    const input = document.getElementById("chat-input");
+    const mensaje = input.value.trim();
+    if (!mensaje) return;
+
+    fetch('/api/chatbot/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            
+        },
+        body: JSON.stringify({ mensaje })
+    })
+    .then(res => res.json())
+    .then(data => {
+        const chat = document.getElementById("chat-messages");
+        if (data.respuesta) {
+            const respuesta = document.createElement("div");
+            respuesta.textContent = "SeeleBot: " + data.respuesta;
+            chat.appendChild(respuesta);
+            chat.scrollTop = chat.scrollHeight;
+        } else if (data.error) {
+            alert("Error: " + data.error);
+        }
+    })
+    .catch(error => alert("Error en la comunicación con el servidor: " + error.message));
+
+    input.value = "";
+}
+</script>

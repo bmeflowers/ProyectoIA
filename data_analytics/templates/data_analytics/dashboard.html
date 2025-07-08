@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard Normal - {{ current_date }}</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .stat-cell {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+        }
+
+            .stat-cell h2 {
+                color: #007bff;
+                margin: 0 0 5px;
+                font-size: 28px;
+            }
+
+            .stat-cell p {
+                margin: 0;
+                font-weight: bold;
+            }
+
+        #habitChartContainer {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" style="
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    ">
+        ← Volver al inicio
+    </a>
+ 
+    <h1>Dashboard Normal - {{ current_date }}</h1>
+
+    <div class="stats-container">
+        <div class="stat-cell">
+            <h2>{{ tejer }}</h2>
+            <p>Tejer (veces)</p>
+        </div>
+        <div class="stat-cell">
+            <h2>{{ correr }}</h2>
+            <p>Correr (veces)</p>
+        </div>
+        <div class="stat-cell">
+            <h2>{{ leer }}</h2>
+            <p>Leer (veces)</p>
+        </div>
+    </div>
+
+    <div id="habitChartContainer">
+        <canvas id="habitChart"></canvas>
+    </div>
+
+    <script>
+    const ctx = document.getElementById('habitChart').getContext('2d');
+    const habitChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Tejer', 'Correr', 'Leer'],
+            datasets: [{
+                label: 'Progreso (%)',
+                data: [{{ progreso_tejer }}, {{ progreso_correr }}, {{ progreso_leer }}],
+                backgroundColor: [
+                    'rgba(0, 123, 255, 0.7)',
+                    'rgba(0, 180, 255, 0.7)',
+                    'rgba(150, 120, 255, 0.7)'
+                ],
+                borderRadius: 5,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: value => value + '%'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Porcentaje de cumplimiento'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        }
+    });
+    </script>
+
+</body>
+</html>

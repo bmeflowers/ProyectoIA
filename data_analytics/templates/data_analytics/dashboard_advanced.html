@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard Avanzado</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .stat-cell {
+            display: inline-block;
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            width: 180px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
+            font-weight: bold;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            color: #177e89;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" style="
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    ">
+        ← Volver al inicio
+    </a>
+
+    <h1>Dashboard Avanzado - Datos Generales {{ current_date }}</h1>
+
+    <div>
+        <div class="stat-cell">
+            <div class="stat-value">{{ total_usuarios }}</div>
+            <div class="stat-label">Total de usuarios</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">{{ habitos_registrados }}</div>
+            <div class="stat-label">Hábitos registrados</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">{{ tareas_completadas }}</div>
+            <div class="stat-label">Tareas completadas</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-value">{{ promedio_actividad }}%</div>
+            <div class="stat-label">Promedio de actividad</div>
+        </div>
+    </div>
+
+    <canvas id="generalChart" width="600" height="300"></canvas>
+
+    <script>
+        const ctx = document.getElementById('generalChart').getContext('2d');
+        const generalData = {
+            labels: ['Total usuarios', 'Hábitos registrados', 'Tareas completadas', 'Promedio actividad'],
+            datasets: [{
+                label: 'Cantidad',
+                data: [{{ total_usuarios }}, {{ habitos_registrados }}, {{ tareas_completadas }}, {{ promedio_actividad }}],
+                backgroundColor: ['#177e89', '#51a3a3', '#7e57c2', '#ffa726']
+            }]
+        };
+
+        const config = {
+            type: 'bar',
+            data: generalData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+        new Chart(ctx, config);
+    </script>
+</body>
+</html>

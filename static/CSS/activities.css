@@ -145,7 +145,7 @@
 
 /* Botón Eliminar (rojo vino) */
 .btn-eliminar {
-    background-color: #c96e6e;
+    background-color: #a85555;
     color: #000000;
     border: none;
     font-weight: 600;
@@ -154,7 +154,7 @@
 }
 
 .btn-eliminar:hover {
-    background-color: #fa0000;
+    background-color: #ad5858;
 }
 
 

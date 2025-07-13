@@ -21,7 +21,7 @@
         <ul class="nav flex-column align-items-center gap-4">
             <!-- Íconos de navegación -->
             <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
+                <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' and request.resolver_match.namespace != 'data_analytics' %}active{% endif %}" href="{% url 'dashboard' %}">
                     <i class="fa-solid fa-house"></i>
                     <span class="nav-indicator"></span>
                 </a>
@@ -33,7 +33,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'progress' %}active{% endif %}" href="#">
+                <a class="nav-link {% if request.resolver_match.namespace == 'data_analytics' %}active{% endif %}" href="{% url 'data_analytics:dashboard' %}">
                     <i class="fa-solid fa-chart-simple"></i>
                     <span class="nav-indicator"></span>
                 </a>

@@ -39,7 +39,7 @@
                     {% for actividad in habitos %}
                     <li class="habit-item">
                         <div class="habit-info">
-                            <strong>{{ actividad.nombre }}</strong><br>
+                            <strong>{{ actividad.icono }} {{ actividad.nombre }}</strong><br>
                             <small>{{ actividad.hora_habito }}</small><br>
                             <small>Días registrados: {{ actividad.total_registros }}</small>
                         </div>
@@ -79,7 +79,7 @@
                     {% for actividad in tareas %}
                     <li class="task-item">
                         <div class="task-info">
-                            <strong>{{ actividad.nombre }}</strong><br>
+                            <strong>{{ actividad.icono }} {{ actividad.nombre }}</strong><br>
                             {{ actividad.descripcion|default:"Sin descripción" }}<br>
                             {% if actividad.fecha_limite %}
                                 <small>Fecha límite: {{ actividad.fecha_limite }}</small>

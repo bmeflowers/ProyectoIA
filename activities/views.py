@@ -26,19 +26,20 @@ def activities(request):
 @login_required
 def agregar_actividad(request):
     dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+    
+    emojis = ['🚴🏻','💪🏻','👩‍💻','🏊🏻','🍳','☕','🏀','🎨','🎮','🧶','📚','🎻','🏃🏻‍♂️', '🚶🏻‍♀️','🧹🧺'
+              '💎', '🧘🏻‍♂️', '📖']
 
     if request.method == 'POST':
         form = ActividadForm(request.POST)
         if form.is_valid():
             actividad = form.save(commit=False)
             actividad.user = request.user
-            actividad.estado = 'pendiente'  # valor por defecto
-
+            actividad.estado = 'pendiente'
             if actividad.tipo == 'habito':
                 actividad.dias_semana = request.POST.getlist('dias_semana')
             else:
                 actividad.dias_semana = None
-
             actividad.save()
             return redirect('activities:activities')
         else:
@@ -49,8 +50,10 @@ def agregar_actividad(request):
     context = {
         'form': form,
         'dias_semana': dias_semana,
+        'emojis': emojis,
     }
     return render(request, 'activities/agregarActividad.html', context)
+
 
 @login_required
 def eliminar_actividad(request, pk):

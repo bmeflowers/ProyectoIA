@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Users.apps.UsersConfig',
     'activities',
-    'mysite'
+    'mysite',
+    'data_analytics',
 ]
 
 MIDDLEWARE = [

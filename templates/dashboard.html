@@ -46,7 +46,10 @@
             </div>
             <ul class="habits-list">
                 {% for habito in habitos %}
-                    <li>{{ habito.nombre }}</li>
+                    <li class="habit-item">
+                        <div class="habit-emoji">{{ habito.icono }}</div>
+                        <div class="habit-name">{{ habito.nombre }}</div>
+                    </li>
                 {% empty %}
                     <li>No tienes hábitos registrados.</li>
                 {% endfor %}

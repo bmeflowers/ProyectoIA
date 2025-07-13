@@ -14,6 +14,7 @@ urlpatterns = [
     path('login/', signin, name='login'),
     path('users/', include('Users.urls', namespace='users')),
     path('activities/', include('activities.urls', namespace='activities')),
+     path('data_analytics/', include('data_analytics.urls', namespace='data_analytics')),
 ]
 
 if settings.DEBUG:

@@ -6,6 +6,9 @@ class Actividad(models.Model):
         ('tarea', 'Tarea'),
         ('habito', 'Hábito'),
     ]
+    
+    icono = models.CharField(max_length=5, blank=True, null=True)
+    
     ESTADO_CHOICES = [
         ('pendiente', 'Pendiente'),
         ('completado', 'Completado'),
@@ -16,10 +19,18 @@ class Actividad(models.Model):
     descripcion = models.TextField(blank=True, null=True)
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
     estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default='pendiente')
-    fecha_limite = models.DateField(null=True, blank=True)  #si es tarea
-    hora_habito = models.TimeField(null=True, blank=True)   #si es hábito
-    dias_semana = models.JSONField(null=True, blank=True)   # Lista de días si es hábito
+    fecha_limite = models.DateField(null=True, blank=True)
+    hora_habito = models.TimeField(null=True, blank=True)
+    dias_semana = models.JSONField(null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    
+    # Aquí agregamos la meta personalizada para días de hábito
+    meta_dias = models.PositiveIntegerField(
+        default=150, 
+        blank=True, 
+        null=True,
+        help_text="Número de días meta para completar este hábito"
+    )
 
     def __str__(self):
         return self.nombre
@@ -29,7 +40,6 @@ class Actividad(models.Model):
 
     def es_tarea(self):
         return self.tipo == 'tarea'
-
 
 class RegistroHabito(models.Model):
     habito = models.ForeignKey(Actividad, on_delete=models.CASCADE, related_name='registros')

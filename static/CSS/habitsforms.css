@@ -29,7 +29,10 @@ form {
     display: inline-block;
     text-align: center;
     width: 100%;
-    margin-top: 20px;
+}
+
+.tipo-wrapper {
+    margin-bottom: 2px !important;
 }
 
 /* Botones */
@@ -88,6 +91,10 @@ textarea#id_descripcion {
     font-family: 'Josefin Sans', sans-serif;
 }
 
+#dias-semana-div {
+    margin-bottom: 1px;
+}
+
 #dias-semana-div .form-check-input {
     background-color: #9c9c9c;
     border-color: #241e49;
@@ -115,3 +122,96 @@ textarea#id_descripcion {
     padding: 3px;
     font-family: 'Josefin Sans', sans-serif;
 }
+
+.habito-dias-hora-container {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 1px;
+    flex-wrap: wrap;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: 150px;
+}
+
+.habito-dias-hora-container > div {
+    flex: 1 1 250px;
+    min-width: 250px;
+}
+
+/* Días a repetir alineado a la izquierda */
+#dias-semana-div {
+    text-align: left;
+}
+
+/* Hora hábito alineado a la derecha */
+#hora-habito-div {
+    text-align: right;
+}
+
+.emoji-picker {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    width: 250px;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    z-index: 10000;
+}
+
+.emoji-picker span {
+    font-size: 20px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.emoji-picker span:hover {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+#emoji-picker-btn {
+    border: 2px solid #3079ce;
+    background-color: white;
+    height: 35px;
+    width: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    border-radius: 5px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+#emoji-picker-btn:hover {
+    background-color: #eaf3ff;
+    border-color: #2b65a0;
+}
+
+.input-group {
+    justify-content: center;
+}
+
+#id_icono {
+    margin-top: 10px;
+    border: 2px solid #3079ce;
+    border-radius: 5px;
+    padding: 4px 6px;
+    font-family: 'Josefin Sans', sans-serif;
+    outline: none;
+    height: 35px;
+    width: 200px;
+    text-align: center;
+}
+
+#id_icono:focus {
+    border-color: #3079ce;
+    box-shadow: 0 0 5px #3079ce;
+}
+

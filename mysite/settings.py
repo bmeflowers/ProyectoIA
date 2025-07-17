@@ -46,6 +46,10 @@ INSTALLED_APPS = [
     'activities',
     'mysite',
     'data_analytics',
+    'reminders',
+    'django_celery_results',
+    'django_celery_beat',
+    'webpush',
 ]
 
 MIDDLEWARE = [
@@ -143,3 +147,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'home'
+
+WEB_PUSH_VAPID_PUBLIC_KEY = "BMDAqTsQZeZ-goCyOC6MIZ-f5uNhf6gB3aqi-LjBxer9pN7JzS5tTjFwt7E0qYkhOCyx78JQk1VJUGzTXRDee-Y"
+WEB_PUSH_VAPID_PRIVATE_KEY = "SQbRswyZy-a-ALpSTFYUe_8pM7uBVdMT4jWP9x3t6Uo"
+WEB_PUSH_VAPID_EMAIL = "soultrackreminder@gmail.com" # Necesario para algunos servicios push
+
+CELERY_BROKER_URL = 'django-db'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'America/Bogota'

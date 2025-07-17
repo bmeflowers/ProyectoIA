@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from activities.models import Actividad, RegistroHabito
 from django.db.models import Count, Q
+from reminders.tasks import send_general_notification
 
 def dashboard(request):
     user = request.user
@@ -31,6 +32,9 @@ def dashboard(request):
             'nombre': habito.nombre,
             'total_completados': total_completados,
         })
+
+        if progreso < 50:  # Ejemplo: Si el progreso es bajo, envía una notificación
+            send_general_notification.delay(request.user.id, f'¡Tu progreso en {habito.nombre} es menor al 50%! ¡Anímate!')
 
     context = {
         'current_date': current_date,

@@ -4,6 +4,8 @@ from django.utils import timezone
 from activities.models import Actividad, RegistroHabito
 from django.db.models import Count, Q
 from reminders.tasks import send_general_notification
+from webpush.models import PushInformation
+
 
 def dashboard(request):
     user = request.user
@@ -20,7 +22,6 @@ def dashboard(request):
     for habito in habitos:
         total_completados = habito.registros.filter(estado='completado').count()
 
-        # Calcular progreso en base a la meta fija de 150 días
         progreso = int((total_completados / META_DIAS) * 100) if META_DIAS > 0 else 0
         if progreso > 100:
             progreso = 100
@@ -33,9 +34,15 @@ def dashboard(request):
             'total_completados': total_completados,
         })
 
-        if progreso < 50:  # Ejemplo: Si el progreso es bajo, envía una notificación
-            send_general_notification.delay(request.user.id, f'¡Tu progreso en {habito.nombre} es menor al 50%! ¡Anímate!')
+        # Verifica si el usuario tiene suscripción push antes de enviar
+        tiene_suscripcion = PushInformation.objects.filter(user=user).exists()
 
+        if progreso < 50 and tiene_suscripcion:
+            send_general_notification.apply(args=[
+                user.id,
+                f'¡Tu progreso en {habito.nombre} es menor al 50%! ¡Anímate!'
+            ])
+            
     context = {
         'current_date': current_date,
         'labels_json': json.dumps(labels),

@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 import json
 from .chatbot import obtener_respuesta
+from django.conf import settings
 
 @csrf_exempt
 @require_POST
@@ -30,9 +31,11 @@ def dashboard(request):
     
     habitos = actividades.filter(tipo='habito')
     tareas = actividades.filter(tipo='tarea')
+
     return render(request, 'dashboard.html', {
         'today': today,
         'habitos': habitos,
         'tareas': tareas,
+        'vapid_public_key': settings.WEBPUSH_SETTINGS['VAPID_PUBLIC_KEY'],  # pasa la clave aquí
     })
 

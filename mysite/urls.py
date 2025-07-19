@@ -16,6 +16,8 @@ urlpatterns = [
     path('activities/', include('activities.urls', namespace='activities')),
     path('data_analytics/', include('data_analytics.urls', namespace='data_analytics')),
     path('webpush/', include('webpush.urls')),
+    path('reminders/', include('reminders.urls')),
+
 ]
 
 if settings.DEBUG:

@@ -148,9 +148,11 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'home'
 
-WEB_PUSH_VAPID_PUBLIC_KEY = "BMDAqTsQZeZ-goCyOC6MIZ-f5uNhf6gB3aqi-LjBxer9pN7JzS5tTjFwt7E0qYkhOCyx78JQk1VJUGzTXRDee-Y"
-WEB_PUSH_VAPID_PRIVATE_KEY = "SQbRswyZy-a-ALpSTFYUe_8pM7uBVdMT4jWP9x3t6Uo"
-WEB_PUSH_VAPID_EMAIL = "soultrackreminder@gmail.com" # Necesario para algunos servicios push
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": "BMDAqTsQZeZ-goCyOC6MIZ-f5uNhf6gB3aqi-LjBxer9pN7JzS5tTjFwt7E0qYkhOCyx78JQk1VJUGzTXRDee-Y",
+    "VAPID_PRIVATE_KEY": "SQbRswyZy-a-ALpSTFYUe_8pM7uBVdMT4jWP9x3t6Uo",
+    "VAPID_ADMIN_EMAIL": "soultrackreminder@gmail.com",
+}
 
 CELERY_BROKER_URL = 'django-db'
 CELERY_RESULT_BACKEND = 'django-db'
@@ -158,3 +160,8 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'America/Bogota'
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+

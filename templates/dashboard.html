@@ -46,45 +46,37 @@
                     <!-- <button class="btn btn-sm btn-outline-primary" onclick="probarNotificacion()">
                         🔔 Probar Notificación
                     </button> -->
-                    <button class="btn btn-sm btn-outline-success" onclick="notificacionAutomatica()">
+                    <!-- <button class="btn btn-sm btn-outline-success" onclick="notificacionAutomatica()">
                         🎯 Notificación Automática
-                    </button>
-                    <button class="btn btn-sm btn-outline-info" onclick="notificacionPorHorario()">
+                    </button> -->
+                    <!-- <button class="btn btn-sm btn-outline-info" onclick="notificacionPorHorario()">
                         ⏰ Notificación por Hora
-                    </button>
-                    <button class="btn btn-sm btn-outline-warning" onclick="notificacionTareas()">
+                    </button> -->
+                    <!-- <button class="btn btn-sm btn-outline-warning" onclick="notificacionTareas()">
                         📋 Tareas Automáticas
-                    </button>
-                    <button class="btn btn-sm btn-outline-info" onclick="motivacionManana()">
+                    </button> -->
+                    <!-- <button class="btn btn-sm btn-outline-info" onclick="motivacionManana()">
                         🌅 Motivación Mañana
-                    </button>
-                    <button class="btn btn-sm btn-outline-warning" onclick="recordatorioMediodia()">
+                    </button> -->
+                    <!-- <button class="btn btn-sm btn-outline-warning" onclick="recordatorioMediodia()">
                         ⏰ Recordatorio Mediodía
-                    </button>
-                    <button class="btn btn-sm btn-outline-primary" onclick="motivacionTarde()">
+                    </button> -->
+                    <!-- <button class="btn btn-sm btn-outline-primary" onclick="motivacionTarde()">
                         🌅 Motivación Tarde
-                    </button>
-                    <button class="btn btn-sm btn-outline-dark" onclick="recordatorioNoche()">
+                    </button> -->
+                    <!-- <button class="btn btn-sm btn-outline-dark" onclick="recordatorioNoche()">
                         🌙 Recordatorio Noche
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="celebracion()">
+                    </button> -->
+                    <!-- <button class="btn btn-sm btn-outline-danger" onclick="celebracion()">
                         🎉 Celebración
-                    </button>
+                    </button> -->
                     <a href="{% url 'activities:agregar_actividad' %}" class="btn btn-sm btn-primary">+ Nuevo</a>
                 </div>
             </div>
             
             <!-- Estado de hábitos -->
             <div class="habits-status mb-3">
-                <div class="progress">
-                    <div class="progress-bar" role="progressbar" 
-                         style="width: {{ porcentaje_completado }}%" 
-                         aria-valuenow="{{ porcentaje_completado }}" 
-                         aria-valuemin="0" 
-                         aria-valuemax="100">
-                    </div>
-                </div>
-                <small class="text-muted">
+                <small class="text-muted" style="color: #333 !important;">
                     {{ habitos_completados }}/{{ total_habitos }} hábitos completados ({{ porcentaje_completado|floatformat:1 }}%)
                 </small>
             </div>

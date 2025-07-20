@@ -6,13 +6,168 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/analystic.css' %}">
+<style>
+    .analytics-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-top: 20px;
+    }
+    
+    .metric-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .metric-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #23AFAF;
+        margin-bottom: 10px;
+    }
+    
+    .metric-label {
+        color: #333;
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+    
+    .metric-description {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .performance-indicator {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-left: 10px;
+    }
+    
+    .performance-excellent { background: #28a745; color: white; }
+    .performance-good { background: #ffc107; color: black; }
+    .performance-needs-improvement { background: #dc3545; color: white; }
+    
+    .habits-analysis {
+        margin-top: 30px;
+    }
+    
+    .habit-item {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-left: 4px solid #23AFAF;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .habit-name {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+    }
+    
+    .habit-progress {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .progress-bar {
+        flex: 1;
+        height: 8px;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+    
+    .progress-excellent { background: #28a745; }
+    .progress-good { background: #ffc107; }
+    .progress-needs-improvement { background: #dc3545; }
+    
+    .navigation-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    .nav-button {
+        background: #23AFAF;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-button:hover {
+        background: #1a8a8a;
+        transform: translateY(-2px);
+    }
+    
+    .chart-title {
+        color: #333;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: 600;
+    }
+    
+    .dashboard-header {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .dashboard-header h1 {
+        color: #333;
+        margin: 0;
+        font-size: 2rem;
+    }
+    
+    .dashboard-header .date {
+        color: #666;
+        margin: 5px 0 0 0;
+    }
+    
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .user-button {
+        color: #23AFAF;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    
+    .user-button:hover {
+        color: #1a8a8a;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="dashboard-container">
     <header class="dashboard-header">
         <div class="title-date">
-            <h1>Análisis</h1>
+            <h1>Análisis de Rendimiento</h1>
             <p class="date">{% localize on %}{{ current_date|date:"d F Y" }}{% endlocalize %}</p>
         </div>
 
@@ -26,24 +181,103 @@
         </div>
     </header>
 
-    <div class="content-flex">
-        <div id="habitChartContainer">
-            <h2 class="chart-title">Estadística de hábitos</h2>
-            <canvas id="habitChart"></canvas>
+    <!-- Métricas principales -->
+    <div class="analytics-grid">
+        <div class="metric-card">
+            <div class="metric-value">
+                {{ analisis.rendimiento_general|floatformat:1 }}%
+                {% if analisis.rendimiento_general >= 80 %}
+                    <span class="performance-indicator performance-excellent">Excelente</span>
+                {% elif analisis.rendimiento_general >= 60 %}
+                    <span class="performance-indicator performance-good">Bueno</span>
+                {% else %}
+                    <span class="performance-indicator performance-needs-improvement">Necesita mejora</span>
+                {% endif %}
+            </div>
+            <div class="metric-label">Rendimiento General</div>
+            <div class="metric-description">Promedio de hábitos y tareas completadas</div>
         </div>
 
-        <div class="stats-container">
-            {% if stats %}
-                {% for habito in stats %}
-                <div class="stat-cell">
-                    <h2>{{ habito.total_completados }}</h2>
-                    <p>{{ habito.nombre }} (Días)</p>
+        <div class="metric-card">
+            <div class="metric-value" style="color: #333;">{{ analisis.rendimiento_habitos|floatformat:1 }}%</div>
+            <div class="metric-label">Rendimiento en Hábitos</div>
+            <div class="metric-description">{{ analisis.habitos_completados }} de {{ analisis.total_habitos }} hábitos completados</div>
+            <!-- Barra de progreso con color -->
+            <div style="margin-top: 10px; background: rgba(0, 0, 0, 0.1); border-radius: 10px; height: 8px; overflow: hidden;">
+                <div style="height: 100%; border-radius: 10px; transition: width 0.3s ease; width: {{ analisis.rendimiento_habitos }}%; 
+                            {% if analisis.rendimiento_habitos >= 80 %}background: #28a745;
+                            {% elif analisis.rendimiento_habitos >= 60 %}background: #ffc107;
+                            {% else %}background: #dc3545;{% endif %}">
                 </div>
-                {% endfor %}
-            {% else %}
-                <p>No hay hábitos registrados.</p>
-            {% endif %}
+            </div>
         </div>
+
+        <div class="metric-card">
+            <div class="metric-value">{{ analisis.rendimiento_tareas|floatformat:1 }}%</div>
+            <div class="metric-label">Rendimiento en Tareas</div>
+            <div class="metric-description">{{ analisis.tareas_completadas }} de {{ analisis.total_tareas }} tareas completadas</div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-value">{{ analisis.dias_activo }}</div>
+            <div class="metric-label">Días Activo</div>
+            <div class="metric-description">Total de días con actividad registrada</div>
+        </div>
+    </div>
+
+    <!-- Gráfico de hábitos -->
+    <div id="habitChartContainer" style="margin: 30px auto; text-align: center; max-width: 800px;">
+        <h2 class="chart-title">Análisis por Hábito</h2>
+        <div style="width: 100%; max-width: 700px; margin: 0 auto;">
+            <canvas id="habitChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Análisis detallado de hábitos -->
+    <div class="habits-analysis">
+        <h2 style="color: #333; font-size: 1.5rem; margin-bottom: 20px;">Análisis Detallado de Hábitos</h2>
+        {% for metrica in metricas_habitos %}
+        <div class="habit-item">
+            <div class="habit-name" style="color: #333;">{{ metrica.habito.nombre }}</div>
+            <div class="habit-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill 
+                        {% if metrica.porcentaje_completado >= 80 %}progress-excellent
+                        {% elif metrica.porcentaje_completado >= 60 %}progress-good
+                        {% else %}progress-needs-improvement{% endif %}"
+                         style="width: {{ metrica.porcentaje_completado }}%">
+                    </div>
+                </div>
+                <span style="color: #333; font-weight: bold;">{{ metrica.porcentaje_completado|floatformat:1 }}%</span>
+                <span style="color: #666; font-size: 0.9rem;">
+                    ({{ metrica.dias_completados }}/{{ metrica.dias_totales }} días)
+                </span>
+                {% if metrica.necesita_mejora %}
+                    <span class="performance-indicator performance-needs-improvement">Necesita mejora</span>
+                {% endif %}
+            </div>
+            <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">
+                Tendencia: {{ metrica.get_tendencia_display }}
+            </div>
+        </div>
+        {% empty %}
+        <p style="color: #666; text-align: center; padding: 20px;">No hay hábitos registrados para analizar.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Navegación -->
+    <div class="navigation-buttons">
+        <a href="{% url 'data_analytics:dashboard_advanced' %}" class="nav-button">
+            Análisis Avanzado
+        </a>
+        <a href="{% url 'data_analytics:analisis_individual' %}" class="nav-button">
+            Análisis Individual
+        </a>
+        {% if user.is_staff %}
+        <a href="{% url 'data_analytics:comparacion_usuarios' %}" class="nav-button">
+            Comparación de Usuarios
+        </a>
+        {% endif %}
     </div>
 </div>
 
@@ -53,28 +287,29 @@
     const habitChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: {{ labels_json|safe }},
+            labels: {{ habitos_labels_json|safe }},
             datasets: [{
-                label: 'Progreso (%)',
-                data: {{ data_json|safe }},
-                backgroundColor: 'rgba(35, 175, 175, 0.7)',
-                borderRadius: 200,
+                label: 'Porcentaje de Completado',
+                data: {{ habitos_data_json|safe }},
+                backgroundColor: {{ habitos_colors_json|safe }},
+                borderRadius: 8,
                 borderWidth: 1
             }]
         },
         options: {
+            responsive: true,
             scales: {
                 y: {
                     beginAtZero: true,
                     max: 100,
                     ticks: {
                         callback: value => value + '%',
-                        color: 'white'
+                        color: '#ffffff'
                     },
                     title: {
                         display: true,
                         text: 'Porcentaje de cumplimiento',
-                        color: 'white'
+                        color: '#ffffff'
                     },
                     grid: {
                         color: 'rgba(255, 255, 255, 0.2)'
@@ -82,7 +317,7 @@
                 },
                 x: {
                     ticks: {
-                        color: 'white'
+                        color: '#ffffff'
                     },
                     grid: {
                         color: 'rgba(255, 255, 255, 0.2)'
@@ -94,11 +329,15 @@
                     display: true,
                     position: 'top',
                     labels: {
-                        color: 'white' 
+                        color: '#ffffff' 
                     }
                 }
             }
         }
     });
+</script>
+
+<script>
+// Aquí se pueden agregar otros scripts si es necesario
 </script>
 {% endblock %}

@@ -1,5 +1,5 @@
 {% extends 'base.html' %} 
-{% block title %}Agregar Actividad - SoulTrack{% endblock %}
+{% block title %}Editar Actividad - SoulTrack{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/habitsforms.css">
@@ -47,12 +47,32 @@
         border-radius: 5px;
         font-size: 14px;
     }
+    
+    .current-meta {
+        background: #d4edda;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 15px 0;
+        border-left: 4px solid #28a745;
+    }
+    
+    .current-meta h4 {
+        color: #155724;
+        margin-bottom: 10px;
+        font-size: 1rem;
+    }
+    
+    .current-meta p {
+        color: #155724;
+        margin: 5px 0;
+        font-size: 0.9rem;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="dashboard-container">
-    <h2 class="mb-4">Agregar nueva actividad</h2>
+    <h2 class="mb-4">Editar Actividad</h2>
 
     <form method="post" id="actividad-form">
         {% csrf_token %}
@@ -87,6 +107,15 @@
             {{ form.fecha_limite.label_tag }} {{ form.fecha_limite }}
         </div>
 
+        <!-- Mostrar meta actual si existe -->
+        {% if actividad.meta_dias and actividad.tipo == 'habito' %}
+        <div class="current-meta">
+            <h4>🎯 Meta Actual</h4>
+            <p><strong>{{ actividad.meta_dias }} días</strong></p>
+            <p>Esta meta se usará para calcular tu progreso y análisis personalizado.</p>
+        </div>
+        {% endif %}
+
         <!-- Sección de Meta Personalizada (solo para hábitos) -->
         <div class="meta-container" id="meta-container" style="display: none;">
             <div class="meta-title">🎯 Meta Personalizada</div>
@@ -111,14 +140,15 @@
                 <label for="dias_semana">Días a repetir:</label><br>
                 {% for dia in dias_semana %}
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="dias_semana" value="{{ dia }}" id="{{ dia|lower }}">
+                    <input class="form-check-input" type="checkbox" name="dias_semana" value="{{ dia }}" id="{{ dia|lower }}"
+                           {% if dia in actividad.dias_semana %}checked{% endif %}>
                     <label class="form-check-label" for="{{ dia|lower }}">{{ dia }}</label>
                 </div>
                 {% endfor %}
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Guardar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
         <a href="{% url 'activities:activities' %}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
@@ -179,4 +209,4 @@
         });
     });
 </script>
-{% endblock %}
+{% endblock %} 

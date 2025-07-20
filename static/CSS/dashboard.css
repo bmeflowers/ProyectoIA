@@ -353,6 +353,19 @@
     transition: width 0.6s ease;
 }
 
+/* Colores dinámicos para la barra de progreso */
+.progress-bar.excellent {
+    background-color: #28a745 !important;
+}
+
+.progress-bar.good {
+    background-color: #ffc107 !important;
+}
+
+.progress-bar.needs-improvement {
+    background-color: #dc3545 !important;
+}
+
 #habits-status-text {
     font-size: 12px;
     color: #6c757d;
@@ -366,33 +379,39 @@
     border-radius: 8px;
     margin-bottom: 8px;
     transition: all 0.3s ease;
-    background: #fff;
-    border: 1px solid #e9ecef;
+    background: #E8F4F8;
+    border: 1px solid #8EAFAF;
+    color: #333;
 }
 
 .habit-item.habit-pending {
     border-left: 4px solid #ffc107;
-    background: #fffbf0;
+    background: #E8F4F8;
+    color: #333;
 }
 
 .habit-item:not(.habit-pending) {
     border-left: 4px solid #28a745;
-    background: #f8fff9;
+    background: #E8F4F8;
+    color: #333;
 }
 
 .habit-info {
     flex: 1;
     margin-left: 12px;
+    color: #333;
 }
 
 .habit-name {
     font-weight: 500;
     margin-bottom: 2px;
+    color: #333;
 }
 
 .habit-info small {
     font-size: 11px;
     font-weight: 500;
+    color: #333;
 }
 
 .text-warning {

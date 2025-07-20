@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Error - Análisis de Datos{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/analystic.css' %}">
+<style>
+    .error-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 40px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .error-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        color: #dc3545;
+    }
+    
+    .error-title {
+        color: white;
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+    
+    .error-message {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1rem;
+        line-height: 1.5;
+        margin-bottom: 30px;
+    }
+    
+    .error-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .error-button {
+        background: #23AFAF;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 25px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-weight: bold;
+    }
+    
+    .error-button:hover {
+        background: #1a8a8a;
+        transform: translateY(-2px);
+    }
+    
+    .back-button {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .back-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-icon">⚠️</div>
+    <h1 class="error-title">Acceso Denegado</h1>
+    <p class="error-message">
+        {{ error|default:"No tienes permisos para acceder a esta funcionalidad. 
+        Esta sección está reservada para administradores del sistema." }}
+    </p>
+    
+    <div class="error-actions">
+        <a href="{% url 'data_analytics:dashboard' %}" class="error-button back-button">
+            ← Volver al Dashboard
+        </a>
+        <a href="{% url 'data_analytics:analisis_individual' %}" class="error-button">
+            Análisis Individual
+        </a>
+    </div>
+</div>
+{% endblock %} 

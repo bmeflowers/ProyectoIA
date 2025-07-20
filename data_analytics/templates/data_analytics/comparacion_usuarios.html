@@ -1,0 +1,471 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load l10n %}
+
+{% block title %}Comparación de Usuarios{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/analystic.css' %}">
+<style>
+    .comparison-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .comparison-header {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    
+    .comparison-header h1 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 2.5rem;
+    }
+    
+    .comparison-header p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+    
+    .stats-overview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #23AFAF;
+        margin-bottom: 10px;
+    }
+    
+    .stat-label {
+        color: #333;
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+    
+    .stat-description {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .trend-indicator {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    
+    .trend-positive { background: #28a745; color: white; }
+    .trend-stable { background: #ffc107; color: black; }
+    .trend-negative { background: #dc3545; color: white; }
+    
+    .users-section {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .section-title {
+        color: #333;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #23AFAF;
+        padding-bottom: 10px;
+    }
+    
+    .users-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    
+    .user-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        padding: 20px;
+        border-left: 4px solid #23AFAF;
+        transition: transform 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .user-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .user-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #23AFAF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+    
+    .user-info h3 {
+        color: #333;
+        margin: 0;
+        font-size: 1.2rem;
+    }
+    
+    .user-info p {
+        color: #666;
+        margin: 5px 0 0 0;
+        font-size: 0.9rem;
+    }
+    
+    .user-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .user-stat {
+        text-align: center;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .user-stat-value {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #23AFAF;
+        margin-bottom: 5px;
+    }
+    
+    .user-stat-label {
+        font-size: 0.8rem;
+        color: #666;
+    }
+    
+    .performance-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    
+    .performance-excellent { background: #28a745; color: white; }
+    .performance-good { background: #ffc107; color: black; }
+    .performance-needs-help { background: #dc3545; color: white; }
+    
+    .areas-improvement {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .areas-improvement h4 {
+        color: #333;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    
+    .areas-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .areas-list li {
+        color: #666;
+        font-size: 0.8rem;
+        margin-bottom: 3px;
+        padding-left: 15px;
+        position: relative;
+    }
+    
+    .areas-list li:before {
+        content: "•";
+        color: #23AFAF;
+        position: absolute;
+        left: 0;
+    }
+    
+    .navigation-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+    }
+    
+    .nav-button {
+        background: #23AFAF;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 25px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-weight: bold;
+    }
+    
+    .nav-button:hover {
+        background: #1a8a8a;
+        transform: translateY(-2px);
+    }
+    
+    .back-button {
+        background: rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.3);
+        color: #333;
+    }
+    
+    .back-button:hover {
+        background: rgba(0, 0, 0, 0.2);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+    }
+    
+    .empty-state h3 {
+        color: #333;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="comparison-container">
+    <!-- Header -->
+    <div class="comparison-header">
+        <h1>Comparación de Usuarios</h1>
+        <p>Análisis de rendimiento grupal y estadísticas generales</p>
+        <p>Fecha de análisis: {{ current_date|date:"d/m/Y" }}</p>
+    </div>
+
+    <!-- Estadísticas generales -->
+    {% if comparacion %}
+    <div class="stats-overview">
+        <div class="stat-card">
+            <div class="stat-value">{{ comparacion.total_usuarios_activos }}</div>
+            <div class="stat-label">Usuarios Activos</div>
+            <div class="stat-description">En los últimos 7 días</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-value">{{ comparacion.promedio_rendimiento_general|floatformat:1 }}%</div>
+            <div class="stat-label">Rendimiento Promedio</div>
+            <div class="stat-description">General de todos los usuarios</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-value">{{ comparacion.promedio_habitos_completados|floatformat:1 }}</div>
+            <div class="stat-label">Hábitos Completados</div>
+            <div class="stat-description">Promedio por usuario</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-value">{{ comparacion.promedio_tareas_completadas|floatformat:1 }}</div>
+            <div class="stat-label">Tareas Completadas</div>
+            <div class="stat-description">Promedio por usuario</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="trend-indicator 
+                {% if comparacion.tendencia_general == 'positiva' %}trend-positive
+                {% elif comparacion.tendencia_general == 'estable' %}trend-stable
+                {% else %}trend-negative{% endif %}">
+                Tendencia: {{ comparacion.get_tendencia_general_display }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Top usuarios -->
+    <div class="users-section">
+        <h2 class="section-title">🏆 Top Usuarios por Rendimiento</h2>
+        {% if top_usuarios %}
+        <div class="users-grid">
+            {% for usuario in top_usuarios %}
+            <div class="user-card">
+                <div class="user-header">
+                    <div class="user-avatar">
+                        {{ usuario.user.username|first|upper }}
+                    </div>
+                    <div class="user-info">
+                        <h3>{{ usuario.user.username }}</h3>
+                        <p>Rendimiento: {{ usuario.rendimiento_general|floatformat:1 }}%</p>
+                    </div>
+                </div>
+                
+                <div class="user-stats">
+                    <div class="user-stat">
+                        <div class="user-stat-value">{{ usuario.habitos_completados }}</div>
+                        <div class="user-stat-label">Hábitos Completados</div>
+                    </div>
+                    <div class="user-stat">
+                        <div class="user-stat-value">{{ usuario.racha_actual }}</div>
+                        <div class="user-stat-label">Racha Actual</div>
+                    </div>
+                </div>
+                
+                <div class="performance-badge performance-excellent">
+                    Excelente Rendimiento
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h3>No hay datos suficientes</h3>
+            <p>Necesitamos más usuarios activos para mostrar el ranking</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Usuarios que necesitan ayuda -->
+    <div class="users-section">
+        <h2 class="section-title">🤝 Usuarios que Necesitan Ayuda</h2>
+        {% if usuarios_ayuda %}
+        <div class="users-grid">
+            {% for usuario in usuarios_ayuda %}
+            <div class="user-card">
+                <div class="user-header">
+                    <div class="user-avatar">
+                        {{ usuario.user.username|first|upper }}
+                    </div>
+                    <div class="user-info">
+                        <h3>{{ usuario.user.username }}</h3>
+                        <p>Rendimiento: {{ usuario.rendimiento_general|floatformat:1 }}%</p>
+                    </div>
+                </div>
+                
+                <div class="user-stats">
+                    <div class="user-stat">
+                        <div class="user-stat-value">{{ usuario.rendimiento_general|floatformat:1 }}%</div>
+                        <div class="user-stat-label">Rendimiento</div>
+                    </div>
+                    <div class="user-stat">
+                        <div class="user-stat-value">{{ usuario.dias_activo }}</div>
+                        <div class="user-stat-label">Días Activo</div>
+                    </div>
+                </div>
+                
+                {% if usuario.habitos_mejorar %}
+                <div class="areas-improvement">
+                    <h4>Áreas de mejora:</h4>
+                    <ul class="areas-list">
+                        {% for habito in usuario.habitos_mejorar|slice:":3" %}
+                        <li>{{ habito }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                <div class="performance-badge performance-needs-help">
+                    Necesita Mejora
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h3>¡Excelente!</h3>
+            <p>Todos los usuarios están teniendo un buen rendimiento</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Usuarios mejorando -->
+    <div class="users-section">
+        <h2 class="section-title">📈 Usuarios en Mejora</h2>
+        {% if comparacion and comparacion.usuarios_mejorando %}
+        <div class="users-grid">
+            {% for usuario in comparacion.usuarios_mejorando %}
+            <div class="user-card">
+                <div class="user-header">
+                    <div class="user-avatar">
+                        {{ usuario.username|first|upper }}
+                    </div>
+                    <div class="user-info">
+                        <h3>{{ usuario.username }}</h3>
+                        <p>Rendimiento: {{ usuario.rendimiento|floatformat:1 }}%</p>
+                    </div>
+                </div>
+                
+                <div class="user-stats">
+                    <div class="user-stat">
+                        <div class="user-stat-value">{{ usuario.rendimiento|floatformat:1 }}%</div>
+                        <div class="user-stat-label">Rendimiento</div>
+                    </div>
+                    <div class="user-stat">
+                        <div class="user-stat-value">{{ usuario.racha_actual }}</div>
+                        <div class="user-stat-label">Racha Actual</div>
+                    </div>
+                </div>
+                
+                <div class="performance-badge performance-good">
+                    En Mejora
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h3>No hay datos suficientes</h3>
+            <p>Necesitamos más tiempo para identificar tendencias de mejora</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Navegación -->
+    <div class="navigation-buttons">
+        <a href="{% url 'data_analytics:dashboard' %}" class="nav-button back-button">
+            ← Volver al Dashboard
+        </a>
+        <a href="{% url 'data_analytics:dashboard_advanced' %}" class="nav-button">
+            Análisis Avanzado
+        </a>
+        <a href="{% url 'data_analytics:analisis_individual' %}" class="nav-button">
+            Análisis Individual
+        </a>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&display=swap');
+
+.dashboard-container {
+    font-family: 'Jost', Arial, sans-serif;
+    max-width: 1200px;
+    margin: 30px;
+    padding-left: 50px;
+    padding-right: 50px;
+    color: #333;
+}
+
+/* Header */
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 10px;
+    padding-bottom: 20px;
+}
+
+.dashboard-header h1 {
+    font-family: 'Hind Vadodara', sans-serif;
+    font-size: 2.5rem;
+    color: #000000;
+    margin: 0;
+    font-weight: 600;
+}
+
+.title-date {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.title-date h1 {
+    margin: 0;
+}
+
+.title-date .date {
+    margin: 0;
+    font-size: 1rem;
+    color: #000000;
+    font-weight: 400;
+}
+
+.user-info a {
+    text-decoration: none;
+    outline: none;
+    border: none;
+}
+
+.user-button {
+    background-color: #649292;
+    color: white;
+    padding: 12px 40px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.user-button:hover {
+    background-color: #435858;
+}
+
+.user-photo-header {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #649292;
+    object-fit: cover;
+}
+
+/* Contenedor flex para gráfica y stats */
+.content-flex {
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Ajustes gráfico */
+#habitChartContainer {
+    flex: 1 1 60%;
+    max-width: 900px;
+    margin: 0;
+    background-color: #46565D;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Título dentro del contenedor de la gráfica */
+#habitChartContainer .chart-title {
+    color: #FFFFFF;
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+    margin-top: 1px;
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+/* Stats verticales */
+.stats-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    flex: 1 1 30%;
+    max-width: 200px;
+    margin: 0;
+}
+
+/* Cada card ocupa todo el ancho del contenedor */
+.stat-cell {
+    flex: none;
+    width: 100%;
+    background: #46565D;
+    padding: 10px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.07);
+}
+
+.stat-cell h2 {
+    color: #fff;
+    margin: 0 0 8px;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.stat-cell p {
+    margin: 0;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .content-flex {
+        flex-direction: column;
+    }
+
+    #habitChartContainer, .stats-container {
+        max-width: 100%;
+        flex: none;
+        margin-bottom: 30px;
+    }
+}

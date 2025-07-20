@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block title %}SoulTrack - Vamos a ayudarte{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/home.css">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-image">
+            <img src="/static/images/SOULTRACK-ICON.png" alt="SoulTrack Logo" class="hero-logo">
+        </div>
+        <h1 class="hero-title">Transforma tus hábitos con IA y análisis de datos</h1>
+        <p class="hero-subtitle">Monitoreo tu productividad, entiende tus patrones y recibe<br>recomendaciones personalizadas</p>
+        <a href="{% url 'Users:login' %}" class="btn btn-primary hero-cta">Inicia ahora</a>
+    </div>
+</section>
+
+<!-- Value Proposition Section -->
+<section class="value-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="section-title">Tu coach de productividad con IA</h2>
+                <p class="section-lead">Vivimos en piloto automático. Días que se repiten, metas que se posterguen y hábitos que no nos llevan a donde queremos.</p>
+                <p class="section-text">¿Y si tu tecnología pudiera realmente entenderte y ayudarte a cambiar?</p>
+            </div>
+            <div class="col-lg-6">
+                <img src="/static/images/das1.png" alt="Dashboard SoulTrack" class="section-image">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features-section" class="features-section">
+    <div class="container">
+        <h2 class="section-title text-center">Una herramienta que escucha tus datos</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3 class="feature-title">Análisis profundo</h3>
+                <p class="feature-text">Identifica patrones ocultos en tus hábitos y comportamientos.</p>
+            </div>
+            <div class="feature-card">
+                <h3 class="feature-title">Recomendaciones IA</h3>
+                <p class="feature-text">Sugerencias personalizadas basadas en GPT-4 y tus metas específicas.</p>
+            </div>
+            <div class="feature-card">
+                <h3 class="feature-title">Visualización intuitiva</h3>
+                <p class="feature-text">Dashboards interactivos para trackear tu progreso en tiempo real.</p>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'Users:login' %}" class="btn btn-outline-primary">Comienza ahora</a>
+        </div>
+    </div>
+</section>
+
+<!-- Habits Section - Carrusel -->
+<section class="habits-section">
+    <div class="container position-relative">
+        <div id="habitsCarousel" class="carousel slide" data-bs-ride="carousel">
+            <!-- Indicadores -->
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#habitsCarousel" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#habitsCarousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#habitsCarousel" data-bs-slide-to="2"></button>
+                <button type="button" data-bs-target="#habitsCarousel" data-bs-slide-to="3"></button>
+            </div>
+
+            <!-- Slides -->
+            <div class="carousel-inner">
+                <!-- Slide 1 -->
+                <div class="carousel-item active">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <h2 class="section-title">Hábitos</h2>
+                            <div class="habit-card">
+                                <h3 class="habit-card-title">Vista general de tu día</h3>
+                                <p class="habit-card-text">Estado de productividad y metas activas.</p>
+                                <h3 class="habit-card-title">Seguimiento detallado</h3>
+                                <p class="habit-card-text">Monitorea tus hábitos y progreso mensual.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <img src="/static/images/das2.png" alt="Seguimiento de hábitos" class="section-image">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-item">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <h2 class="section-title">Tu Progreso</h2>
+                            <div class="habit-card">
+                                <h3 class="habit-card-title">Estadísticas completas</h3>
+                                <p class="habit-card-text">Visualiza tu evolución y tendencias.</p>
+                                <h3 class="habit-card-title">Logros y metas</h3>
+                                <p class="habit-card-text">Revisa tus objetivos cumplidos.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <img src="/static/images/das3.png" alt="Progreso" class="section-image">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="carousel-item">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <h2 class="section-title">Tareas</h2>
+                            <div class="habit-card">
+                                <h3 class="habit-card-title">Gestión inteligente</h3>
+                                <p class="habit-card-text">Organiza y prioriza tus actividades.</p>
+                                <h3 class="habit-card-title">Recordatorios</h3>
+                                <p class="habit-card-text">Nunca olvides una tarea importante.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <img src="/static/images/das4.png" alt="Tareas" class="section-image">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 4 -->
+                <div class="carousel-item">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <h2 class="section-title">Chat IA</h2>
+                            <div class="habit-card">
+                                <h3 class="habit-card-title">Asistente personal</h3>
+                                <p class="habit-card-text">Obtén recomendaciones basadas en tus datos.</p>
+                                <h3 class="habit-card-title">Análisis predictivo</h3>
+                                <p class="habit-card-text">Descubre patrones en tu comportamiento.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <img src="/static/images/das1.png" alt="Chat IA" class="section-image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controles FUERA del .container -->
+    <button class="carousel-control carousel-control-prev" type="button" data-bs-target="#habitsCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control carousel-control-next" type="button" data-bs-target="#habitsCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center mx-auto">
+                <h2 class="cta-title">¿Listo para tomar el control de tus hábitos?</h2>
+                <p class="cta-text">Descubre cómo SoulTrack puede transformar tu productividad con análisis inteligente.</p>
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'Users:signup' %}" class="btn btn-primary">Comienza ahora</a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-flex justify-content-end">
+                <img src="/static/images/SoulIn.png" alt="Control de hábitos" class="cta-image">
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,329 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@300;400&family=Jua&display=swap');
+
+/* === Estilos generales === */
+.dashboard-container {
+    font-family: 'Jost', Arial, sans-serif;
+    max-width: 1200px;
+    margin: 30px;
+    padding-left: 50px;
+    padding-right: 50px;
+    color: #333;
+}
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 10px;
+    padding-bottom: 20px;
+}
+
+.dashboard-header h1 {    
+    font-family: 'Hind Vadodara', sans-serif;
+    font-size: 2.5rem;
+    color: #000000;
+    margin: 0;
+    font-weight: 700;
+}
+
+.user-photo-header {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #649292;
+    object-fit: cover;
+}
+
+.title-date {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.title-date h1 {
+    margin: 0;
+}
+
+.title-date .date {
+    margin: 0;
+    font-size: 1rem;
+    color: #000000;
+    font-weight: 400;
+}
+
+.user-button {
+    background-color: #649292;
+    color: white;
+    padding: 12px 40px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    margin-left: auto;
+    transition: all 0.3s ease;
+}
+
+.user-button:hover{
+    background-color: #435858;
+}
+
+.user {
+    font-size: 1rem;
+    color: #7f8c8d;
+}
+
+.user-info a {
+    text-decoration: none;
+    outline: none;
+    border: none;
+}
+
+/* === Layout de secciones === */
+.dashboard-content {
+    padding-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: space-between;
+}
+
+.habits-section,
+.tasks-section {
+    flex: 1 1 48%;
+    background-color: #EFF2F2;
+    border: 3px solid #8EAFAF;
+    border-radius: 20px;
+    padding: 20px 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.habits-section h3,
+.tasks-section h3 {
+    font-size: 1.6rem;
+    color: #2A6F97;
+    margin-bottom: 20px;
+}
+
+
+/* === Botones generales === */
+.btn.btn-primary {
+    background-color: #2A6F97;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 6px 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn.btn-primary:hover {
+    background-color: #1d4c6a;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+}
+
+.btn-group a {
+    margin-left: 6px;
+}
+
+/* Botón Registrar (blanco) */
+.btn-registrar {
+    background-color: #ffffff;
+    color: #000000;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-registrar:hover {
+    background-color: #c9c9c9;
+}
+
+/* Botón Eliminar (rojo vino) */
+.btn-eliminar {
+    background-color: #a85555;
+    color: #000000;
+    border: none;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-eliminar:hover {
+    background-color: #ad5858;
+}
+
+
+/* === Lista de hábitos === */
+.habits-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.habits-list li {
+    flex: 1 1 180px;
+    background-color: #82abc5;
+    color: black;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    position: relative;
+}
+
+.habits-list li:hover {
+    background-color: none;
+    transform: none;
+}
+
+.habits-list a {
+    color: #000;
+    font-size: 0.9rem;
+}
+
+.habit-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 15px;
+    background-color: #2A6F97;
+    color: white;
+    border-radius: 12px;
+}
+
+.habit-info {
+    flex: 1;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.habit-info strong {
+    font-size: 1.1rem;
+}
+
+.habit-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+.habit-actions .btn-sm {
+    font-size: 0.85rem;
+    padding: 5px 12px;
+    white-space: nowrap;
+}
+
+
+/* === Lista de tareas === */
+.tasks-list {
+    list-style: none;
+    padding: 0;
+}
+
+.tasks-list li {
+    background-color: #82abc5;
+    color: #000;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tasks-list li:hover {
+    background-color: none;
+    transform: none;
+}
+
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 15px;
+    background-color: #82abc5;
+    color: black;
+    border-radius: 12px;
+}
+
+.task-info {
+    flex: 1;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.task-info strong {
+    font-size: 1.1rem;
+}
+
+.task-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+.task-actions .btn-sm {
+    font-size: 0.85rem;
+    padding: 5px 12px;
+    white-space: nowrap;
+}
+
+
+/* === Estado vacío === */
+.tasks-list .text-muted,
+.habits-list .text-muted {
+    background-color: #ecf0f1;
+    color: #000;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tasks-list .text-muted:hover,
+.habits-list .text-muted:hover {
+    background-color: transparent;
+    transform: none;
+}
+
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .dashboard-content {
+        flex-direction: column;
+    }
+
+    .habits-section,
+    .tasks-section {
+        flex: 1 1 100%;
+    }
+
+    .habits-list {
+        justify-content: center;
+    }
+
+    .habit-item,
+    .task-item {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .habit-actions,
+    .task-actions {
+        align-items: center;
+        margin-top: 10px;
+    }
+}

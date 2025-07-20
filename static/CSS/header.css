@@ -1,0 +1,516 @@
+/* /static/css/main.css (o puedes seguir llamándolo header.css si prefieres) */
+@import url('https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@300;400&family=Jua&display=swap');
+
+/* --- Estilos Generales --- */
+html, body {
+    font-family: 'Hind Vadodara', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; 
+}
+
+.container.mt-4 { 
+    flex-grow: 1;
+}
+
+
+/* --- Navbar Principal --- */
+.custom-navbar {
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    padding: 15px 30px;
+    position: relative; 
+    z-index: 1000;
+}
+
+.custom-navbar .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    flex-wrap: wrap; 
+}
+
+/* --- Logo Centrado --- */
+.custom-brand {
+    color: #176B87 !important;
+    font-family: 'Jua', sans-serif !important;
+    font-size: 28px !important;
+    font-weight: bold !important;
+    text-decoration: none !important;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    z-index: 1001;
+}
+
+/* --- Navegación Izquierda --- */
+.custom-nav-left {
+    display: flex;
+    margin-right: auto;
+    padding-left: 0;
+}
+
+.custom-nav-left .nav-item .nav-link {
+    color: #333333 !important;
+    font-size: 16px !important;
+    font-weight: 500;
+    padding: 8px 15px !important;
+    transition: color 0.2s ease;
+}
+
+.custom-nav-left .nav-item .nav-link:hover {
+    color: #007bff !important;
+}
+
+/* --- Navegación Derecha --- */
+.custom-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-left: auto; 
+    padding-right: 0;
+}
+
+/* Estilo Login */
+.custom-login-link {
+    color: #333333 !important;
+    font-size: 16px !important;
+    font-weight: 500;
+    text-decoration: underline !important;
+    text-underline-offset: 2px; 
+    text-decoration-color: #176B87 !important; 
+    transition: all 0.2s ease;
+    padding: 8px 0 !important;
+}
+
+.custom-login-link:hover {
+    color: #007bff !important;
+    text-decoration-color: #007bff !important; 
+    text-decoration-thickness: 2px; 
+}
+
+/* Estilo Get Started */
+.custom-get-started-btn {
+    background-color: #176B87 !important;
+    color: #ffffff !important;
+    padding: 10px 20px !important;
+    border-radius: 20px !important;
+    border: none !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    transition: background-color 0.2s ease;
+}
+
+.custom-get-started-btn:hover {
+    background-color: #1a7fb8 !important;
+}
+
+/* Estilo Logout */
+.custom-logout-btn {
+    background-color: transparent !important;
+    color: #176B87 !important;
+    border: 2px solid #176B87 !important;
+    padding: 8px 18px !important;
+    border-radius: 20px !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease;
+}
+
+.navbar-nav .nav-item form .custom-logout-btn {
+    border: 2px solid #176B87 !important;
+}
+
+/* Sidebar vertical fijo */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 100vh;
+    background-color: #649292;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 15px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Icono arriba */
+.sidebar-icon {
+    margin-top: 20px;
+    width: 50px;
+    height: 50px;
+}
+
+.sidebar-brand {
+    font-family: 'Jua', sans-serif;
+    font-size: 14px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.sidebar-icons-only {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 70px;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-icons-only .nav-link {
+    width: 50px;
+    height: 50px;
+    color: #ffffff;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    padding: 0;
+}
+
+.sidebar-icons-only .nav-link.active {
+    background-color: #2B5E7C;
+    border-radius: 20px;
+}
+
+.sidebar-icons-only .nav-link.active .nav-indicator {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    width: 20px;
+    height: 2px;
+    background-color: #ffffff;
+    border-radius: 2px;
+}
+
+/* Navegación vertical */
+.sidebar .nav {
+    width: 100%;
+}
+
+.sidebar-logout {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.logout-icon-btn {
+    margin-top: 10px;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 20px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+
+.content-with-sidebar {
+    margin-left: 80px;
+    padding: 0;
+}
+
+.custom-navbar {
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    padding: 15px 30px;
+    position: relative;
+    z-index: 1000;
+}
+
+.custom-navbar .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+.custom-brand {
+    color: #176B87 !important;
+    font-family: 'Jua', sans-serif !important;
+    font-size: 28px !important;
+    font-weight: bold !important;
+    text-decoration: none !important;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    z-index: 1001;
+}
+
+.custom-logout-btn:hover {
+    background-color: #176B87 !important;
+    color: #ffffff !important;
+}
+
+/* --- Estilos Responsivos del Header --- */
+@media (max-width: 991.98px) { 
+    .custom-navbar {
+        padding: 15px;
+    }
+    
+    .custom-brand {
+        position: static; 
+        transform: none;
+        left: auto;
+        order: 1; 
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    
+    .custom-navbar .container-fluid {
+        flex-direction: column; 
+        align-items: flex-start; 
+    }
+
+    .custom-navbar .navbar-toggler {
+        order: 0; 
+        align-self: flex-end; 
+        position: absolute; 
+        right: 15px;
+        top: 15px;
+    }
+
+    .custom-navbar .navbar-collapse {
+        width: 100%;
+        margin-top: 15px; 
+    }
+    
+    .custom-nav-left {
+        order: 2;
+        width: 100%;
+        justify-content: center; 
+        margin: 15px 0;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .custom-nav-left .nav-item {
+        width: 100%; 
+        text-align: center;
+    }
+    
+    .custom-nav-right {
+        order: 3;
+        width: 100%;
+        justify-content: center; 
+        margin: 0;
+        flex-direction: column;
+        align-items: center; 
+    }
+    
+    .custom-get-started-btn,
+    .custom-logout-btn,
+    .custom-login-link { 
+        width: 100%;
+        text-align: center;
+        padding: 10px !important;
+    }
+}
+
+/* --- ESTILOS DEL FOOTER --- */
+
+.main-footer {
+    background-color: #6A9096; 
+    padding-bottom: 20px; 
+    position: relative;
+    width: 100%;
+}
+
+.footer-wave-container {
+    background-color: #79A1A9;
+    padding: 60px 40px; 
+    position: relative;
+    overflow: hidden;
+}
+
+.main-footer {
+    background-image: url('/static/images/bkgdfooter.png');
+    background-repeat: no-repeat;
+    background-size: cover; 
+    background-position: center bottom; 
+    background-color: transparent;
+    padding-bottom: 20px;
+    position: relative;
+    width: 100%;
+}
+
+.footer-wave-container {
+    background-color: transparent;
+    padding: 40px 40px 30px 40px;
+    position: relative;
+    z-index: 1;
+    border-top: none;
+}
+
+/* Contenedor Flex para el contenido dentro de la onda */
+.footer-content-wrapper {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+}
+
+/* Sección de la Marca e Información (izquierda) */
+.footer-brand-info {
+    display: flex;
+    align-items: flex-start;
+    max-width: 480px;
+    margin-right: 40px;
+    margin-bottom: 20px;
+}
+
+.footer-icon {
+    width: 60px;
+    height: auto;
+    margin-right: 15px;
+}
+
+.footer-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-brand {
+    color: #2A6F97;
+    font-family: 'Jua', sans-serif !important;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-decoration: none;
+}
+
+.footer-description {
+    color: #000000;
+    font-family: 'Hind Vadodara', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* Navegación del Footer (derecha) */
+.footer-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex: 1;
+    max-width: 400px;
+}
+
+.footer-nav ul {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-nav ul li a {
+    text-decoration: none;
+    color: #000000;
+    font-family: 'Hind Vadodara', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.footer-nav ul li a:hover {
+    color: #364368;
+}
+
+/* Línea Divisora */
+.footer-divider {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    width: calc(100% - 80px);
+    max-width: 1120px;
+    margin: 20px auto 10px auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Texto de Copyright */
+.footer-copyright {
+    color: rgba(0, 0, 0, 0.6);
+    font-family: 'Hind Vadodara', sans-serif;
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Responsividad para el Footer --- */
+@media (max-width: 768px) {
+    .footer-wave-container {
+        padding: 40px 20px;
+    }
+
+    .footer-content-wrapper {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-brand-info {
+        margin-right: 0;
+        margin-bottom: 30px;
+        align-items: center;
+    }
+
+    .footer-nav ul {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .footer-divider {
+        width: 80%;
+        margin: 30px auto 15px auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer-wave-container {
+        padding: 30px 15px;
+    }
+    .footer-icon {
+        width: 50px;
+    }
+    .footer-brand {
+        font-size: 24px;
+    }
+    .footer-description {
+        font-size: 13px;
+    }
+    .footer-nav ul li a {
+        font-size: 15px;
+    }
+    .footer-copyright {
+        font-size: 12px;
+    }
+}

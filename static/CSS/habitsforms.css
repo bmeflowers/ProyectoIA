@@ -1,0 +1,217 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@300;400&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Jua&display=swap');
+
+/* Estilo general del body para centrar */
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Hind Vadodara', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Contenedor principal */
+.dashboard-container {
+    font-family: 'Josefin Sans', 'Segoe UI', Arial, sans-serif;
+    /*max-width: 600px;
+    width: 100%;
+    padding: 30px 50px;
+    color: #333;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);*/
+    text-align: center;
+}
+
+/* Formularios */
+form {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+
+.tipo-wrapper {
+    margin-bottom: 2px !important;
+}
+
+/* Botones */
+button, a.btn {
+    margin: 10px 5px 0;
+}
+
+.btn-primary{
+    background-color: #3079ce;
+    border: none;
+    border-radius: 10px;
+}
+
+.btn-primary:hover{
+    background-color: #2b588b;
+}
+
+.btn-secondary{
+    background-color: #6a6a70;
+    border: none;
+    border-radius: 10px;
+}
+
+.btn-secondary:hover{
+    background-color: #3c3c3f;
+}
+
+#id_nombre {
+    border: 2px solid #3079ce;
+    border-radius: 5px;
+    padding: 5px 8px;
+}
+
+#id_descripcion {
+    border-radius: 5px;
+    width: 100%;
+}
+
+#id_tipo {
+    background-color: #b3cce7;
+    border: 2px solid #3079ce;
+    border-radius: 5px;
+    padding: 5px 8px;
+}
+
+#id_tipo option {
+    color: black;
+}
+
+textarea#id_descripcion {
+    width: 300px;
+    height: 150px;
+    resize: none;
+    border: 2px solid #3079ce;
+    padding: 5px;
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+#dias-semana-div {
+    margin-bottom: 1px;
+}
+
+#dias-semana-div .form-check-input {
+    background-color: #9c9c9c;
+    border-color: #241e49;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* check marcado */
+#dias-semana-div .form-check-input:checked {
+    background-color: #3079ce;
+    border-color: #3079ce;
+}
+
+#id_fecha_limite {
+    border: 2px solid #3079ce;
+    border-radius: 5px;
+    padding: 3px;
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+#id_hora_habito {
+    border: 2px solid #3079ce;
+    border-radius: 5px;
+    padding: 3px;
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+.habito-dias-hora-container {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 1px;
+    flex-wrap: wrap;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: 150px;
+}
+
+.habito-dias-hora-container > div {
+    flex: 1 1 250px;
+    min-width: 250px;
+}
+
+/* Días a repetir alineado a la izquierda */
+#dias-semana-div {
+    text-align: left;
+}
+
+/* Hora hábito alineado a la derecha */
+#hora-habito-div {
+    text-align: right;
+}
+
+.emoji-picker {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    width: 250px;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    z-index: 10000;
+}
+
+.emoji-picker span {
+    font-size: 20px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.emoji-picker span:hover {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+#emoji-picker-btn {
+    border: 2px solid #3079ce;
+    background-color: white;
+    height: 35px;
+    width: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    border-radius: 5px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+#emoji-picker-btn:hover {
+    background-color: #eaf3ff;
+    border-color: #2b65a0;
+}
+
+.input-group {
+    justify-content: center;
+}
+
+#id_icono {
+    margin-top: 10px;
+    border: 2px solid #3079ce;
+    border-radius: 5px;
+    padding: 4px 6px;
+    font-family: 'Josefin Sans', sans-serif;
+    outline: none;
+    height: 35px;
+    width: 200px;
+    text-align: center;
+}
+
+#id_icono:focus {
+    border-color: #3079ce;
+    box-shadow: 0 0 5px #3079ce;
+}
+

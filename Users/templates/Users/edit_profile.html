@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Perfil - SoulTrack{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/profileEDIT.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mb-4">Editar Perfil</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="edit-profile-container">
+            <div class="edit-profile-image-container">
+                <img id="preview-image"
+                    src="{% if user.userprofile.foto %}{{ user.userprofile.foto.url }}{% else %}/static/images/default-user.png{% endif %}"
+                    alt="Foto de perfil del usuario">
+
+                <div class="edit-profile-file">
+                    <input type="file" id="id_foto" name="foto" accept="image/*" hidden>
+                    <label for="id_foto" class="custom-file-label">Cambiar Foto</label>
+                    {% if form.foto.errors %}
+                        <div class="text-danger small">{{ form.foto.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="edit-profile-form">
+                {% for field in form %}
+                    {% if field.name != 'foto' %}
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger small">{{ field.errors|join:", " }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a href="{% url 'Users:profile' %}" class="btn btn-secondary">Descartar</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Script para visualizacion de imagen previa -->
+<script>
+    const inputFoto = document.getElementById("id_foto");
+    const preview = document.getElementById("preview-image");
+
+    if (inputFoto) {
+        inputFoto.addEventListener("change", function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+</script>
+{% endblock %}

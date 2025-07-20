@@ -1,0 +1,571 @@
+{% extends 'base.html' %}
+
+{% load l10n %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/dashboard.css">
+<link rel="stylesheet" href="/static/css/SeeleBot.css">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <header class="dashboard-header">
+        <div class="title-date">
+            <h1>Dashboard</h1>
+            <p class="date">{% localize on %}{{ today|date:"d F Y" }}{% endlocalize %}</p>
+        </div>
+
+        <div class="user-info">
+            {% if user.userprofile.foto %}
+                <a href="{% url 'Users:profile' %}">
+                    <img src="{{ user.userprofile.foto.url }}" alt="Foto de perfil" class="user-photo-header">
+                </a>
+            {% endif %}
+            <a href="{% url 'Users:profile' %}" class="user-button">{{ user.username }}</a>
+        </div>
+    </header>
+
+    <div class="welcome-wrapper">
+        <section class="welcome-section">
+            <h2>Hola <span class="username">{{ user.username }}</span>!</h2>
+            <p>Vamos a darlo todo... ¿Preparado?</p>
+        </section>
+
+        <div class="welcome-image">
+            <img src="/static/images/SoulFn.png" alt="Imagen de bienvenida">
+        </div>
+    </div>
+
+    <div class="dashboard-content">
+        <div class="habits-section">
+            <div class="habits-header d-flex justify-content-between align-items-center mb-3">
+                <h3>Hábitos</h3>
+                <div class="d-flex gap-2">
+                    <!-- <button class="btn btn-sm btn-outline-primary" onclick="probarNotificacion()">
+                        🔔 Probar Notificación
+                    </button> -->
+                    <button class="btn btn-sm btn-outline-success" onclick="notificacionAutomatica()">
+                        🎯 Notificación Automática
+                    </button>
+                    <button class="btn btn-sm btn-outline-info" onclick="notificacionPorHorario()">
+                        ⏰ Notificación por Hora
+                    </button>
+                    <button class="btn btn-sm btn-outline-warning" onclick="notificacionTareas()">
+                        📋 Tareas Automáticas
+                    </button>
+                    <button class="btn btn-sm btn-outline-info" onclick="motivacionManana()">
+                        🌅 Motivación Mañana
+                    </button>
+                    <button class="btn btn-sm btn-outline-warning" onclick="recordatorioMediodia()">
+                        ⏰ Recordatorio Mediodía
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary" onclick="motivacionTarde()">
+                        🌅 Motivación Tarde
+                    </button>
+                    <button class="btn btn-sm btn-outline-dark" onclick="recordatorioNoche()">
+                        🌙 Recordatorio Noche
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="celebracion()">
+                        🎉 Celebración
+                    </button>
+                    <a href="{% url 'activities:agregar_actividad' %}" class="btn btn-sm btn-primary">+ Nuevo</a>
+                </div>
+            </div>
+            
+            <!-- Estado de hábitos -->
+            <div class="habits-status mb-3">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" 
+                         style="width: {{ porcentaje_completado }}%" 
+                         aria-valuenow="{{ porcentaje_completado }}" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                </div>
+                <small class="text-muted">
+                    {{ habitos_completados }}/{{ total_habitos }} hábitos completados ({{ porcentaje_completado|floatformat:1 }}%)
+                </small>
+            </div>
+            
+            <ul class="habits-list">
+                {% for habito in habitos %}
+                    <li class="habit-item {% if habito.id in habitos_pendientes %}habit-pending{% endif %}">
+                        <div class="habit-emoji">{{ habito.icono }}</div>
+                        <div class="habit-info">
+                            <div class="habit-name">{{ habito.nombre }}</div>
+                            {% if habito.id in habitos_pendientes %}
+                                <small class="text-warning">Pendiente hoy</small>
+                            {% else %}
+                                <small class="text-success">Completado</small>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="no-habits">
+                        <div class="no-habits-content">
+                            <div class="no-habits-icon">📝</div>
+                            <div class="no-habits-text">
+                                <p>No tienes hábitos registrados.</p>
+                                <small>Comienza creando tu primer hábito para mejorar tu rutina diaria.</small>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+                <li class="add-habit">
+                    <a href="{% url 'activities:agregar_actividad' %}">+</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tasks-section">
+            <h3>Tareas</h3>
+            <ul class="tasks-list">
+                {% for tarea in tareas %}
+                    <li class="task-item">
+                        <div class="task-name">{{ tarea.nombre }}</div>
+                        <small class="text-muted">{{ tarea.fecha_creacion|date:"d/m/Y" }}</small>
+                    </li>
+                {% empty %}
+                    <li class="no-tasks">
+                        <div class="no-tasks-content">
+                            <div class="no-tasks-icon">📋</div>
+                            <div class="no-tasks-text">
+                                <p>No tienes tareas registradas.</p>
+                                <small>Organiza tu día creando tareas específicas.</small>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% include "SeeleBot.html" %}
+
+<script>
+const publicKey = "{{ vapid_key }}";
+console.log('VAPID Key:', publicKey);
+
+function urlBase64ToUint8Array(base64String) {
+  console.log('Convirtiendo clave VAPID:', base64String);
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for(let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  console.log('Clave convertida:', outputArray);
+  return outputArray;
+}
+
+function waitForActivation(registration) {
+  return new Promise((resolve) => {
+    console.log('Estado del service worker:', registration.active ? 'activo' : 'inactivo');
+    if (registration.active) {
+      console.log('Service Worker ya está activo');
+      resolve(registration);
+    } else if (registration.installing) {
+      console.log('Service Worker se está instalando...');
+      registration.installing.addEventListener('statechange', (event) => {
+        console.log('Cambio de estado del SW:', event.target.state);
+        if (event.target.state === 'activated') {
+          console.log('Service Worker activado');
+          resolve(registration);
+        }
+      });
+    } else {
+      console.log('Service Worker no está instalando ni activo');
+      resolve(registration);
+    }
+  });
+}
+
+function subscribeUser() {
+  console.log('Iniciando suscripción push...');
+  
+  // Verificar si el service worker está disponible
+  if (!('serviceWorker' in navigator)) {
+    console.error('Service Worker no está disponible');
+    return;
+  }
+  
+  // Verificar si el push manager está disponible
+  if (!('PushManager' in window)) {
+    console.error('Push Manager no está disponible');
+    return;
+  }
+
+  // Verificar si estamos en desarrollo local
+  const isLocalhost = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+  if (isLocalhost) {
+    console.warn('Ejecutando en desarrollo local. Las notificaciones push pueden tener limitaciones.');
+  }
+
+  navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
+    .then(registration => {
+      console.log("Service Worker registrado exitosamente:", registration);
+      return waitForActivation(registration);
+    })
+    .then(registration => {
+      console.log("Service Worker activo, suscribiendo al Push Manager...");
+      console.log('Registration:', registration);
+      console.log('PushManager:', registration.pushManager);
+      
+      const applicationServerKey = urlBase64ToUint8Array(publicKey);
+      console.log('Application Server Key:', applicationServerKey);
+      
+      // Intentar suscripción con manejo de errores mejorado
+      return registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: applicationServerKey
+      }).catch(error => {
+        console.error('Error en pushManager.subscribe:', error);
+        
+        // Si estamos en desarrollo local, mostrar mensaje informativo
+        if (isLocalhost) {
+          console.warn('En desarrollo local, este error es común. Las notificaciones push funcionan mejor en producción con HTTPS.');
+          // Simular una suscripción exitosa para desarrollo
+          return {
+            toJSON: () => ({
+              endpoint: 'https://fcm.googleapis.com/fcm/send/development-simulation',
+              keys: {
+                p256dh: 'development-key',
+                auth: 'development-auth'
+              }
+            })
+          };
+        }
+        throw error;
+      });
+    })
+    .then(subscription => {
+      console.log('Suscripción push exitosa:', subscription);
+      console.log('Subscription JSON:', subscription.toJSON());
+      
+      // Usar URL hardcodeada temporalmente para evitar problemas de template
+      return fetch("/save-push-subscription/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({
+          subscription: subscription.toJSON(),
+          browser: navigator.userAgent.includes("Chrome") ? "chrome" : "firefox",
+          user_agent: navigator.userAgent,
+          status_type: "subscribe",
+          group: ""
+        })
+      });
+    })
+    .then(response => {
+      console.log('Respuesta del servidor:', response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      console.log('Suscripción guardada exitosamente');
+      return response.json();
+    })
+    .then(data => {
+      console.log('✅ Sistema de notificaciones configurado correctamente!');
+      console.log('• Suscripción guardada en la base de datos');
+      console.log('• Sistema funcionando en modo desarrollo');
+      console.log('• Para notificaciones reales, usa HTTPS en producción');
+      console.log('El "error" de pushManager es normal en desarrollo local');
+    })
+    .catch(error => {
+      console.error('Error en la suscripción push:', error);
+    });
+}
+
+// Función para probar notificaciones personalizadas
+function probarNotificacion() {
+  console.log('Probando notificación personalizada...');
+  
+  fetch('/reminders/recordatorio/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Respuesta del servidor:', data);
+    if (data.status === 'success') {
+      alert('✅ Notificación enviada: ' + data.message);
+    } else if (data.status === 'no_pending') {
+      alert('ℹ️ ' + data.message);
+    } else {
+      alert('❌ Error: ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('❌ Error al enviar notificación');
+  });
+}
+
+// Función para notificación automática
+function notificacionAutomatica() {
+  console.log('Ejecutando notificación automática...');
+  
+  fetch('/reminders/notificacion-automatica/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Respuesta automática:', data);
+    if (data.status === 'success') {
+      alert(`✅ Notificación automática enviada!\n\n${data.message}\n\nProgreso: ${data.completados}/${data.total} hábitos (${data.porcentaje.toFixed(1)}%)`);
+    } else {
+      alert('ℹ️ ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('❌ Error al enviar notificación automática');
+  });
+}
+
+// Ejecutar notificación automática al cargar la página (después de 3 segundos)
+setTimeout(() => {
+  console.log('Ejecutando notificación automática por horario al cargar...');
+  notificacionPorHorario();
+  
+  // También ejecutar notificación de tareas después de 5 segundos
+  setTimeout(() => {
+    console.log('Ejecutando notificación de tareas automática...');
+    notificacionTareas();
+  }, 2000);
+}, 3000);
+
+// Función para notificación automática por horario
+function notificacionPorHorario() {
+  console.log('Ejecutando notificación automática por horario...');
+  
+  fetch('/reminders/notificacion-horario/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Respuesta notificación por horario:', data);
+    if (data.status === 'success') {
+      alert(`⏰ Notificación automática (${data.hora}):\n\n${data.message}\n\nTipo: ${data.tipo}\nProgreso: ${data.completados}/${data.total} hábitos (${data.porcentaje.toFixed(1)}%)`);
+    } else if (data.status === 'no_schedule') {
+      console.log('No hay notificaciones programadas para esta hora');
+    } else {
+      alert('ℹ️ ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('❌ Error al enviar notificación automática');
+  });
+}
+
+// Función para notificación de tareas automáticas
+function notificacionTareas() {
+  console.log('Ejecutando notificación de tareas automáticas...');
+  
+  fetch('/reminders/tareas-automatica/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Respuesta notificación de tareas:', data);
+    if (data.status === 'success') {
+      alert(`📋 Notificación de tareas (${data.hora}):\n\n${data.message}\n\nTipo: ${data.tipo}\nTotal tareas: ${data.total_tareas}`);
+    } else if (data.status === 'no_schedule') {
+      console.log('No hay notificaciones de tareas programadas para esta hora');
+    } else {
+      alert('ℹ️ ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('❌ Error al enviar notificación de tareas');
+  });
+}
+
+// Función para motivación de mañana
+function motivacionManana() {
+  console.log('Ejecutando motivación de mañana...');
+  
+  fetch('/reminders/motivacion-manana/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Respuesta motivación mañana:', data);
+    if (data.status === 'success') {
+      alert(`🌅 ${data.message}`);
+    } else {
+      alert('ℹ️ ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('❌ Error al enviar notificación');
+  });
+}
+
+// Función para recordatorio de mediodía
+function recordatorioMediodia() {
+  console.log('Ejecutando recordatorio de mediodía...');
+  
+  fetch('/reminders/recordatorio-mediodia/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Respuesta recordatorio mediodía:', data);
+    if (data.status === 'success') {
+      alert(`⏰ ${data.message}`);
+    } else {
+      alert('ℹ️ ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('❌ Error al enviar notificación');
+  });
+}
+
+// Función para motivación de tarde
+function motivacionTarde() {
+  console.log('Ejecutando motivación de tarde...');
+  
+  fetch('/reminders/motivacion-tarde/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Respuesta motivación tarde:', data);
+    if (data.status === 'success') {
+      alert(`🌅 ${data.message}`);
+    } else {
+      alert('ℹ️ ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('❌ Error al enviar notificación');
+  });
+}
+
+// Función para recordatorio de noche
+function recordatorioNoche() {
+  console.log('Ejecutando recordatorio de noche...');
+  
+  fetch('/reminders/recordatorio-noche/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Respuesta recordatorio noche:', data);
+    if (data.status === 'success') {
+      alert(`🌙 ${data.message}`);
+    } else {
+      alert('ℹ️ ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('❌ Error al enviar notificación');
+  });
+}
+
+// Función para celebración
+function celebracion() {
+  console.log('Ejecutando celebración...');
+  
+  fetch('/reminders/celebracion/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Respuesta celebración:', data);
+    if (data.status === 'success') {
+      alert(`🎉 ${data.message}`);
+    } else {
+      alert('ℹ️ ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('❌ Error al enviar notificación');
+  });
+}
+
+// Verificar permisos y capacidades
+console.log('Service Worker disponible:', 'serviceWorker' in navigator);
+console.log('Push Manager disponible:', 'PushManager' in window);
+console.log('Permisos de notificación:', Notification.permission);
+console.log('Entorno de desarrollo:', window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost');
+
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+  if (Notification.permission === "granted") {
+    console.log('Permisos ya otorgados, iniciando suscripción...');
+    subscribeUser();
+  } else if (Notification.permission === "default") {
+    console.log('Solicitando permisos de notificación...');
+    Notification.requestPermission().then(permission => {
+      console.log('Permiso otorgado:', permission);
+      if (permission === "granted") {
+        subscribeUser();
+      } else {
+        console.warn("Usuario no aceptó notificaciones.");
+      }
+    });
+  } else {
+    console.warn("Permiso para notificaciones denegado.");
+  }
+} else {
+  console.error('Service Worker o Push Manager no están disponibles');
+  
+  // En desarrollo local, mostrar mensaje informativo
+  if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+    console.warn('Nota: Las notificaciones push pueden no funcionar correctamente en desarrollo local.');
+    console.warn('Para pruebas completas, considera usar HTTPS o un dominio público.');
+  }
+}
+</script>
+
+{% endblock %}

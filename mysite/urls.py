@@ -1,28 +1,34 @@
-"""
-URL configuration for mysite project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from Users.views import home, signin
+from . import views
 from django.urls import path
-from tasks import views
+from main.views import service_worker
 
 urlpatterns = [
+    path("api/chatbot/", views.chatbot_api, name="chatbot_api"),
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
-    path('signup/', views.signup, name='signup'),
-    path('tasks/', views.tasks, name='tasks'),
-    path('logout/', views.signout, name='logout'),
-    path('signin/', views.signin, name='signin'),
+    path('', home, name='home'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('login/', signin, name='login'),
+    path('users/', include('Users.urls', namespace='users')),
+    path('activities/', include('activities.urls', namespace='activities')),
+    path('data_analytics/', include('data_analytics.urls', namespace='data_analytics')),
+    path('webpush/', include(('webpush.urls', 'webpush'), namespace='webpush')),
+    path('reminders/', include('reminders.urls')),
+    path('service-worker.js', service_worker, name='service_worker'),
+    path('test-push-status/', views.test_push_status, name='test_push_status'),
+    path('test-vapid-keys/', views.test_vapid_keys, name='test_vapid_keys'),
+    path('test-simple/', views.test_simple, name='test_simple'),
+    path('clear-development-subscription/', views.clear_development_subscription, name='clear_development_subscription'),
+    path('save-push-subscription/', views.save_push_subscription, name='save_push_subscription'),
+    path('enviar-notificacion-inteligente/', views.enviar_notificacion_inteligente, name='enviar_notificacion_inteligente'),
+    path('obtener-estado-habitos/', views.obtener_estado_habitos, name='obtener_estado_habitos'),
+    path('enviar-notificacion-motivacional/', views.enviar_notificacion_motivacional_manual, name='enviar_notificacion_motivacional'),
+    path('push-testing/', views.push_testing, name='push_testing'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

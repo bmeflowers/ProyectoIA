@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load l10n %}
+
+{% block title %}Mis Actividades - SoulTrack{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/activities.css">
+<link rel="stylesheet" href="/static/css/SeeleBot.css">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <header class="dashboard-header">
+        <div class="title-date">
+            <h1>Hábitos y Tareas</h1>
+            <p class="date">{% localize on %}{{ today|date:"d F Y" }}{% endlocalize %}</p>
+        </div>
+
+        <div class="user-info">
+            {% if user.userprofile.foto %}
+                <a href="{% url 'Users:profile' %}">
+                    <img src="{{ user.userprofile.foto.url }}" alt="Foto de perfil" class="user-photo-header">
+                </a>
+            {% endif %}
+            <a href="{% url 'Users:profile' %}" class="user-button">{{ user.username }}</a>
+        </div>
+    </header>
+
+    <div class="dashboard-content">
+        <!-- Sección de Hábitos -->
+        <div class="habits-section">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Hábitos</h3>
+                <a href="{% url 'activities:agregar_actividad' %}" class="btn btn-primary">+ Añadir</a>
+            </div>
+
+            <ul class="habits-list">
+                {% if habitos %}
+                    {% for actividad in habitos %}
+                    <li class="habit-item">
+                        <div class="habit-info">
+                            <strong>{{ actividad.icono }} {{ actividad.nombre }}</strong><br>
+                            <small>{{ actividad.hora_habito }}</small><br>
+                            <small>Días registrados: {{ actividad.total_registros }}</small>
+                        </div>
+                        <div class="habit-actions">
+                            {% if actividad.registrado_hoy %}
+                                <button class="btn btn-success btn-sm"> Registrado</button>
+                            {% else %}
+                                <a href="{% url 'activities:registrar_habito' actividad.id %}" 
+                                class="btn btn-primary btn-sm">
+                                Registrar hoy
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'activities:eliminar_actividad' actividad.id %}" 
+                            class="btn btn-danger btn-sm">
+                            Eliminar
+                            </a>
+                        </div>
+                    </li>
+                    <!--<small>Debug: registrado_hoy={{ actividad.registrado_hoy }}, count={{ actividad.total_registros }}</small>
+</li>!-->
+                    {% endfor %}
+                {% else %}
+                    <li class="text-muted">No tienes hábitos registrados.</li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Sección de Tareas -->
+        <div class="tasks-section">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Tareas</h3>
+                <a href="{% url 'activities:agregar_actividad' %}" class="btn btn-primary">+ Añadir</a>
+            </div>
+
+            <ul class="tasks-list">
+                {% if tareas %}
+                    {% for actividad in tareas %}
+                    <li class="task-item">
+                        <div class="task-info">
+                            <strong>{{ actividad.icono }} {{ actividad.nombre }}</strong><br>
+                            {{ actividad.descripcion|default:"Sin descripción" }}<br>
+                            {% if actividad.fecha_limite %}
+                                <small>Fecha límite: {{ actividad.fecha_limite }}</small>
+                            {% endif %}
+                        </div>
+                        <div class="task-actions">
+                            <a href="{% url 'activities:cambiar_estado' actividad.id %}" class="btn btn-registrar btn-sm mb-2">
+                                {% if actividad.estado == 'completado' %}Completado{% else %}Registrar{% endif %}
+                            </a>
+                            <a href="{% url 'activities:eliminar_actividad' actividad.id %}" class="btn btn-eliminar btn-sm">Eliminar</a>
+                        </div>
+                    </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="text-muted">No tienes tareas registradas.</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% include "SeeleBot.html" %}
+{% endblock %}

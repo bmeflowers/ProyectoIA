@@ -1,0 +1,104 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+{% load l10n %}
+
+{% block title %}Mi progreso{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/analystic.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <header class="dashboard-header">
+        <div class="title-date">
+            <h1>Análisis</h1>
+            <p class="date">{% localize on %}{{ current_date|date:"d F Y" }}{% endlocalize %}</p>
+        </div>
+
+        <div class="user-info">
+            {% if user.userprofile.foto %}
+                <a href="{% url 'Users:profile' %}">
+                    <img src="{{ user.userprofile.foto.url }}" alt="Foto de perfil" class="user-photo-header">
+                </a>
+            {% endif %}
+            <a href="{% url 'Users:profile' %}" class="user-button">{{ user.username }}</a>
+        </div>
+    </header>
+
+    <div class="content-flex">
+        <div id="habitChartContainer">
+            <h2 class="chart-title">Estadística de hábitos</h2>
+            <canvas id="habitChart"></canvas>
+        </div>
+
+        <div class="stats-container">
+            {% if stats %}
+                {% for habito in stats %}
+                <div class="stat-cell">
+                    <h2>{{ habito.total_completados }}</h2>
+                    <p>{{ habito.nombre }} (Días)</p>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No hay hábitos registrados.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('habitChart').getContext('2d');
+    const habitChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ labels_json|safe }},
+            datasets: [{
+                label: 'Progreso (%)',
+                data: {{ data_json|safe }},
+                backgroundColor: 'rgba(35, 175, 175, 0.7)',
+                borderRadius: 200,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: value => value + '%',
+                        color: 'white'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Porcentaje de cumplimiento',
+                        color: 'white'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: 'white'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        color: 'white' 
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

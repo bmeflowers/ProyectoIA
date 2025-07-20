@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrar Hábito - SoulTrack{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/habitsforms.css">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2 class="mb-4">Registrar hábito: <strong>{{ habito.nombre }}</strong></h2>
+    <p><strong>Fecha:</strong> {{ fecha|date:"d F Y" }}</p>
+
+    {% if registrado_hoy %}
+    <div class="alert alert-success mb-4">
+        ✔ Ya registraste este hábito hoy
+    </div>
+    {% endif %}
+
+    <form method="post" class="mb-3">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                {% if registrado_hoy %}Actualizar registro{% else %}Guardar registro{% endif %}
+            </button>
+            <a href="{% url 'activities:activities' %}" class="btn btn-secondary">Volver</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

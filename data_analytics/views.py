@@ -6,6 +6,14 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 from datetime import date, timedelta
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
+from io import BytesIO
 from activities.models import Actividad, RegistroHabito
 from .models import AnalisisUsuario, MetricaHabitual, ReporteRendimiento, ComparacionUsuarios
 
@@ -266,7 +274,7 @@ def comparacion_usuarios(request):
 def api_metricas_usuario(request):
     """API endpoint para obtener métricas del usuario en formato JSON"""
     if not request.user.is_authenticated:
-        return JsonResponse({'error': 'Usuario no autenticado'}, status=401)
+        return HttpResponse({'error': 'Usuario no autenticado'}, status=401)
     
     user = request.user
     today = timezone.now().date()
@@ -312,7 +320,192 @@ def api_metricas_usuario(request):
         'habitos_metricas': habitos_metricas
     }
     
-    return JsonResponse(data)
+    return HttpResponse(json.dumps(data))
+
+@login_required
+def generar_documento_analisis(request):
+    """Genera un documento PDF con el análisis completo de hábitos del usuario"""
+    user = request.user
+    today = date.today()
+    
+    # Obtener análisis actualizado
+    analisis, created = AnalisisUsuario.objects.get_or_create(
+        user=user,
+        defaults={'fecha_analisis': today}
+    )
+    
+    if created or analisis.fecha_analisis != today:
+        actualizar_analisis_usuario(user)
+        analisis.refresh_from_db()
+    
+    # Obtener hábitos del usuario
+    habitos = Actividad.objects.filter(user=user, tipo='habito')
+    habitos_analisis = []
+    
+    for habito in habitos:
+        dias_completados = habito.registros.filter(estado='completado').count()
+        dias_totales = habito.meta_dias if habito.meta_dias else 30
+        porcentaje = (dias_completados / dias_totales * 100) if dias_totales > 0 else 0
+        
+        # Calcular tendencia
+        ultimos_7_dias = habito.registros.filter(
+            fecha__gte=today - timedelta(days=7),
+            estado='completado'
+        ).count()
+        
+        if ultimos_7_dias >= 5:
+            tendencia = 'Mejorando'
+        elif ultimos_7_dias >= 3:
+            tendencia = 'Estable'
+        else:
+            tendencia = 'Necesita mejora'
+        
+        habitos_analisis.append({
+            'nombre': habito.nombre,
+            'dias_completados': dias_completados,
+            'dias_totales': dias_totales,
+            'porcentaje': round(porcentaje, 1),
+            'tendencia': tendencia,
+            'meta_dias': habito.meta_dias or 30
+        })
+    
+    # Crear el documento PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="analisis_habitos_{user.username}_{today.strftime("%Y%m%d")}.pdf"'
+    
+    # Crear el documento
+    doc = SimpleDocTemplate(response, pagesize=A4)
+    story = []
+    
+    # Estilos
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=24,
+        spaceAfter=30,
+        alignment=TA_CENTER,
+        textColor=colors.HexColor('#23AFAF')
+    )
+    
+    subtitle_style = ParagraphStyle(
+        'CustomSubtitle',
+        parent=styles['Heading2'],
+        fontSize=16,
+        spaceAfter=20,
+        textColor=colors.HexColor('#333333')
+    )
+    
+    normal_style = ParagraphStyle(
+        'CustomNormal',
+        parent=styles['Normal'],
+        fontSize=12,
+        spaceAfter=12
+    )
+    
+    # Título del documento
+    story.append(Paragraph("Análisis de Hábitos - SoulTrack", title_style))
+    story.append(Spacer(1, 20))
+    
+    # Información del usuario
+    story.append(Paragraph(f"Usuario: {user.username}", subtitle_style))
+    story.append(Paragraph(f"Fecha del análisis: {today.strftime('%d/%m/%Y')}", normal_style))
+    story.append(Spacer(1, 20))
+    
+    # Resumen ejecutivo
+    story.append(Paragraph("Resumen Ejecutivo", subtitle_style))
+    story.append(Paragraph(f"Rendimiento general: {analisis.rendimiento_general:.1f}%", normal_style))
+    story.append(Paragraph(f"Hábitos completados: {analisis.habitos_completados}/{analisis.total_habitos}", normal_style))
+    story.append(Paragraph(f"Días activo: {analisis.dias_activo}", normal_style))
+    story.append(Paragraph(f"Racha actual: {analisis.racha_actual} días", normal_style))
+    story.append(Paragraph(f"Mejor racha: {analisis.mejor_racha} días", normal_style))
+    story.append(Spacer(1, 20))
+    
+    # Análisis detallado de hábitos
+    if habitos_analisis:
+        story.append(Paragraph("Análisis Detallado de Hábitos", subtitle_style))
+        
+        # Tabla de hábitos
+        table_data = [['Hábito', 'Completado', 'Meta', 'Porcentaje', 'Tendencia']]
+        
+        for habito in habitos_analisis:
+            table_data.append([
+                habito['nombre'],
+                f"{habito['dias_completados']} días",
+                f"{habito['dias_totales']} días",
+                f"{habito['porcentaje']}%",
+                habito['tendencia']
+            ])
+        
+        table = Table(table_data, colWidths=[2*inch, 1*inch, 1*inch, 1*inch, 1.5*inch])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#23AFAF')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 12),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 1), (-1, -1), 10),
+        ]))
+        
+        story.append(table)
+        story.append(Spacer(1, 20))
+    
+    # Recomendaciones
+    story.append(Paragraph("Recomendaciones", subtitle_style))
+    
+    if analisis.rendimiento_general < 60:
+        story.append(Paragraph("• Tu rendimiento general está por debajo del 60%. Te recomendamos:", normal_style))
+        story.append(Paragraph("  - Establecer metas más pequeñas y alcanzables", normal_style))
+        story.append(Paragraph("  - Crear recordatorios diarios para tus hábitos", normal_style))
+        story.append(Paragraph("  - Celebrar los pequeños logros", normal_style))
+    elif analisis.rendimiento_general < 80:
+        story.append(Paragraph("• Tu rendimiento es bueno. Para mejorarlo:", normal_style))
+        story.append(Paragraph("  - Mantén la consistencia en tus hábitos actuales", normal_style))
+        story.append(Paragraph("  - Considera agregar nuevos hábitos gradualmente", normal_style))
+        story.append(Paragraph("  - Revisa los hábitos que necesitan más atención", normal_style))
+    else:
+        story.append(Paragraph("• ¡Excelente rendimiento! Para mantenerlo:", normal_style))
+        story.append(Paragraph("  - Continúa con tu rutina actual", normal_style))
+        story.append(Paragraph("  - Considera desafíos más grandes", normal_style))
+        story.append(Paragraph("  - Comparte tu experiencia con otros", normal_style))
+    
+    if analisis.racha_actual < 7:
+        story.append(Paragraph("• Tu racha actual es corta. Para construir consistencia:", normal_style))
+        story.append(Paragraph("  - Enfócate en un hábito a la vez", normal_style))
+        story.append(Paragraph("  - Usa recordatorios visuales", normal_style))
+        story.append(Paragraph("  - Celebra cada día completado", normal_style))
+    
+    story.append(Spacer(1, 20))
+    
+    # Metas para el próximo período
+    story.append(Paragraph("Metas para el Próximo Período", subtitle_style))
+    story.append(Paragraph("Basándote en tu análisis actual, te sugerimos:", normal_style))
+    story.append(Paragraph(f"• Mantener una racha de al menos {max(7, analisis.racha_actual + 3)} días", normal_style))
+    story.append(Paragraph(f"• Mejorar el rendimiento general al {min(90, analisis.rendimiento_general + 10)}%", normal_style))
+    story.append(Paragraph("• Revisar y ajustar metas de hábitos problemáticos", normal_style))
+    story.append(Paragraph("• Documentar tu progreso diariamente", normal_style))
+    
+    story.append(Spacer(1, 30))
+    
+    # Pie de página
+    footer_style = ParagraphStyle(
+        'Footer',
+        parent=styles['Normal'],
+        fontSize=10,
+        alignment=TA_CENTER,
+        textColor=colors.grey
+    )
+    story.append(Paragraph("Documento generado automáticamente por SoulTrack", footer_style))
+    story.append(Paragraph(f"Fecha de generación: {timezone.now().strftime('%d/%m/%Y %H:%M')}", footer_style))
+    
+    # Construir el documento
+    doc.build(story)
+    
+    return response
 
 # Funciones auxiliares
 def actualizar_analisis_usuario(user):

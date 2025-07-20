@@ -273,6 +273,9 @@
         <a href="{% url 'data_analytics:analisis_individual' %}" class="nav-button">
             Análisis Individual
         </a>
+        <a href="{% url 'data_analytics:generar_documento' %}" class="nav-button" style="background: #28a745; color: white;">
+            📄 Generar Documento
+        </a>
         {% if user.is_staff %}
         <a href="{% url 'data_analytics:comparacion_usuarios' %}" class="nav-button">
             Comparación de Usuarios

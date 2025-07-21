@@ -46,14 +46,10 @@
         <div class="metric-card">
             <div class="metric-value" style="color: #333;">{{ analisis.rendimiento_habitos|floatformat:1 }}%</div>
             <div class="metric-label">Rendimiento en Hábitos</div>
-            <div class="metric-description">{{ analisis.habitos_completados }} de {{ analisis.total_habitos }} hábitos completados</div>
+            <div class="metric-description">{{ suma_dias_completados }} de {{ suma_metas }} días completados</div>
             <!-- Barra de progreso con color -->
             <div style="margin-top: 10px; background: rgba(0, 0, 0, 0.1); border-radius: 10px; height: 8px; overflow: hidden;">
-                <div style="height: 100%; border-radius: 10px; transition: width 0.3s ease; width: {{ analisis.rendimiento_habitos }}%; 
-                            {% if analisis.rendimiento_habitos >= 80 %}background: #28a745;
-                            {% elif analisis.rendimiento_habitos >= 60 %}background: #ffc107;
-                            {% else %}background: #dc3545;{% endif %}">
-                </div>
+                <div style="height: 100%; border-radius: 10px; transition: width 0.3s ease; width: {{ analisis.rendimiento_habitos }}%; background: {% if analisis.rendimiento_habitos >= 80 %}#28a745{% elif analisis.rendimiento_habitos >= 60 %}#ffc107{% else %}#dc3545{% endif %};"></div>
             </div>
         </div>
 
@@ -81,6 +77,9 @@
         <a href="{% url 'data_analytics:generar_documento' %}" class="nav-button" style="background: #28a745; color: white;">
             Generar Documento
         </a>
+        <!--<a href="{% url 'data_analytics:reporte_errores' %}" class="nav-button" style="background: #dc3545; color: white;">
+            Verificar Análisis
+        </a>-->
         {% if user.is_staff %}
         <a href="{% url 'data_analytics:comparacion_usuarios' %}" class="nav-button">
             Comparación de Usuarios
@@ -104,12 +103,17 @@
             <div class="habit-name" style="color: #333;">{{ metrica.habito.nombre }}</div>
             <div class="habit-progress">
                 <div class="progress-bar">
-                    <div class="progress-fill 
-                        {% if metrica.porcentaje_completado >= 80 %}progress-excellent
-                        {% elif metrica.porcentaje_completado >= 60 %}progress-good
+                    {% with dias_totales=metrica.dias_totales porcentaje=metrica.porcentaje_completado %}
+                    <div class="progress-fill
+                        {% if porcentaje == 100 %}progress-excellent
+                        {% elif porcentaje >= 80 %}progress-excellent
+                        {% elif porcentaje >= 60 %}progress-good
+                        {% elif dias_totales <= 7 and porcentaje >= 50 %}progress-good
+                        {% elif dias_totales <= 3 and porcentaje >= 33 %}progress-good
                         {% else %}progress-needs-improvement{% endif %}"
-                         style="width: {{ metrica.porcentaje_completado }}%">
+                         style="width: {{ porcentaje }}%">
                     </div>
+                    {% endwith %}
                 </div>
                 <span style="color: #333; font-weight: bold;">{{ metrica.porcentaje_completado|floatformat:1 }}%</span>
                 <span style="color: #666; font-size: 0.9rem;">

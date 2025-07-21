@@ -26,4 +26,4 @@ class CustomAuthenticationForm(forms.Form):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['nombre_completo', 'edad', 'ocupacion', 'genero']
+        fields = ['nombre_completo', 'edad', 'ocupacion', 'genero', 'foto']

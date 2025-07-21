@@ -6,6 +6,7 @@ body {
     font-family: 'Hind Vadodara', sans-serif;
     color: #4a5366;
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
 /* Tipografías específicas */
@@ -59,15 +60,21 @@ body {
 
 /* value section */
 .value-section {
+    display: block;
+    align-items: initial;
+    justify-content: initial;
+    min-height: unset;
+    height: unset;
     padding: 4rem 0;
     background-image: url("/static/images/ondas.png");
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
     color: #333131;
     position: relative;
-    width: 100vw;
-    margin-left: -10%;
-    margin-right: 50%;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .value-section::before {
@@ -135,15 +142,21 @@ body {
 
 /* Habits Section - Carrusel con controles externos */
 .habits-section {
+    display: block;
+    align-items: initial;
+    justify-content: initial;
+    min-height: unset;
+    height: unset;
     padding: 5rem 0;
     background-image: url("/static/images/redondo.png");
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
     color: #333131;
     position: relative;
-    width: 100vw;
-    margin-left: -10%;
-    margin-right: 50%;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
     overflow: hidden;
 }
 
@@ -320,5 +333,113 @@ body {
     .section-title,
     .cta-title {
         font-size: 1.8rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+    .hero-section {
+        padding: 8rem 0 7rem 0;
+    }
+    .hero-title {
+        font-size: 3.2rem;
+    }
+    .hero-subtitle {
+        font-size: 1.5rem;
+    }
+    .hero-logo {
+        width: 140px;
+        height: 140px;
+    }
+    .value-section {
+        min-height: unset;
+        height: unset;
+        padding: 6rem 0;
+        width: 100%;
+        display: block;
+        align-items: initial;
+        justify-content: initial;
+    }
+    .features-section {
+        padding: 7rem 0 6rem 0;
+    }
+    .features-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3rem;
+    }
+    .feature-title {
+        font-size: 1.8rem;
+    }
+    .feature-card {
+        padding: 2.5rem 2rem;
+    }
+    .habits-section {
+        min-height: unset;
+        height: unset;
+        padding: 7rem 0 6rem 0;
+        width: 100%;
+        display: block;
+        align-items: initial;
+        justify-content: initial;
+    }
+    .habits-section .habit-card {
+        padding: 2.5rem 2rem;
+    }
+    .section-title, .cta-title {
+        font-size: 2.6rem;
+    }
+    .section-lead, .cta-text {
+        font-size: 1.3rem;
+    }
+    .section-image, .cta-image {
+        max-width: 90%;
+        height: auto;
+    }
+    .cta-section {
+        padding: 7rem 0 6rem 0;
+    }
+    .btn {
+        font-size: 1.2rem;
+        padding: 0.8rem 2.2rem;
+    }
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 60px;
+        height: 60px;
+    }
+    .carousel-control-prev {
+        left: 70px;
+    }
+    .carousel-control-next {
+        right: 70px;
+    }
+    .value-section .container,
+    .habits-section .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        z-index: 1;
+    }
+    .value-section,
+    .habits-section {
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        width: 100vw;
+        box-sizing: border-box;
+    }
+    .value-section .container,
+    .habits-section .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+        z-index: 1;
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
 }

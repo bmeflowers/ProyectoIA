@@ -36,8 +36,6 @@ def dashboard(request):
             'tareas_completadas': 0,
             'total_tareas': 0,
             'dias_activo': 0,
-            'racha_actual': 0,
-            'mejor_racha': 0,
             'habitos_mejorar': []
         }
     )
@@ -53,23 +51,31 @@ def dashboard(request):
     
     for habito in habitos:
         dias_completados = habito.registros.filter(estado='completado').count()
-        dias_totales = habito.meta_dias if habito.meta_dias else 30  # Usar meta personalizada o 30 días por defecto
+        dias_totales = habito.meta_dias if habito.meta_dias else 30
         
         # Calcular porcentaje basado en la meta personalizada
         porcentaje = (dias_completados / dias_totales * 100) if dias_totales > 0 else 0
+        porcentaje = min(porcentaje, 100)  # Limitar al 100%
         
         # Determinar si necesita mejora basado en la meta personalizada
         necesita_mejora = porcentaje < 60 and dias_completados < dias_totales * 0.6
         
-        # Calcular tendencia
+        # Calcular tendencia (últimos 7 días vs días anteriores)
         ultimos_7_dias = habito.registros.filter(
             fecha__gte=today - timedelta(days=7),
             estado='completado'
         ).count()
         
-        if ultimos_7_dias >= 5:
+        # Calcular promedio de días anteriores para comparar
+        dias_anteriores = habito.registros.filter(
+            fecha__lt=today - timedelta(days=7),
+            estado='completado'
+        ).count()
+        dias_anteriores_promedio = dias_anteriores / 7 if dias_anteriores > 0 else 0
+        
+        if ultimos_7_dias > dias_anteriores_promedio + 1:
             tendencia = 'mejorando'
-        elif ultimos_7_dias >= 3:
+        elif ultimos_7_dias >= dias_anteriores_promedio - 1:
             tendencia = 'estable'
         else:
             tendencia = 'empeorando'
@@ -80,7 +86,8 @@ def dashboard(request):
             'dias_totales': dias_totales,
             'porcentaje_completado': porcentaje,
             'necesita_mejora': necesita_mejora,
-            'tendencia': tendencia
+            'tendencia': tendencia,
+            'ultimos_7_dias': ultimos_7_dias
         }
         metricas_habitos.append(metrica)
     
@@ -97,6 +104,13 @@ def dashboard(request):
         else:
             habitos_colors.append('#dc3545')  # Rojo
     
+    # Calcular suma de días completados y suma de metas
+    suma_dias_completados = 0
+    suma_metas = 0
+    for habito in habitos:
+        suma_dias_completados += habito.registros.filter(estado='completado').count()
+        suma_metas += habito.meta_dias if habito.meta_dias else 30
+
     context = {
         'analisis': analisis,
         'metricas_habitos': metricas_habitos,
@@ -104,6 +118,9 @@ def dashboard(request):
         'habitos_labels_json': json.dumps(habitos_labels),
         'habitos_data_json': json.dumps(habitos_data),
         'habitos_colors_json': json.dumps(habitos_colors),
+        'current_date': today,
+        'suma_dias_completados': suma_dias_completados,
+        'suma_metas': suma_metas,
     }
     
     return render(request, 'data_analytics/dashboard.html', context)
@@ -191,29 +208,42 @@ def analisis_individual(request, user_id=None):
     for habito in habitos:
         dias_completados = habito.registros.filter(estado='completado').count()
         dias_totales = habito.meta_dias if habito.meta_dias else 30
-        
         porcentaje = (dias_completados / dias_totales * 100) if dias_totales > 0 else 0
-        
-        # Calcular tendencia
-        ultimos_7_dias = habito.registros.filter(
-            fecha__gte=today - timedelta(days=7),
+
+        # Calcular porcentaje de avance en los últimos 7 días
+        fecha_hoy = today
+        fecha_7 = today - timedelta(days=6)
+        fecha_14 = today - timedelta(days=13)
+        # Últimos 7 días
+        completados_ultimos_7 = habito.registros.filter(
+            fecha__gte=fecha_7,
+            fecha__lte=fecha_hoy,
             estado='completado'
         ).count()
-        
-        if ultimos_7_dias >= 5:
+        porcentaje_ultimos_7 = (completados_ultimos_7 / 7) * 100
+        # 7 días anteriores
+        completados_anteriores_7 = habito.registros.filter(
+            fecha__gte=fecha_14,
+            fecha__lt=fecha_7,
+            estado='completado'
+        ).count()
+        porcentaje_anteriores_7 = (completados_anteriores_7 / 7) * 100
+        # Comparar porcentajes
+        diferencia = porcentaje_ultimos_7 - porcentaje_anteriores_7
+        if diferencia > 10:
             tendencia = 'mejorando'
-        elif ultimos_7_dias >= 3:
-            tendencia = 'estable'
-        else:
+        elif diferencia < -10:
             tendencia = 'empeorando'
-        
+        else:
+            tendencia = 'estable'
+
         habito_analisis = {
             'habito': habito,
             'dias_completados': dias_completados,
             'total_dias': dias_totales,
             'porcentaje': porcentaje,
             'tendencia': tendencia,
-            'necesita_mejora': porcentaje < 60 and dias_completados < dias_totales * 0.6
+            'necesita_mejora': False  # Ya no se usa
         }
         habitos_analisis.append(habito_analisis)
     
@@ -235,7 +265,7 @@ def comparacion_usuarios(request):
     
     # Obtener o crear comparación
     comparacion, created = ComparacionUsuarios.objects.get_or_create(
-        fecha_comparacion=today,
+        fecha_analisis=today,
         defaults={
             'total_usuarios_activos': 0,
             'promedio_rendimiento_general': 0,
@@ -247,7 +277,7 @@ def comparacion_usuarios(request):
         }
     )
     
-    if created or comparacion.fecha_comparacion != today:
+    if created or comparacion.fecha_analisis != today:
         actualizar_comparacion_usuarios()
         comparacion.refresh_from_db()
     
@@ -315,8 +345,6 @@ def api_metricas_usuario(request):
         'rendimiento_habitos': analisis.rendimiento_habitos,
         'rendimiento_tareas': analisis.rendimiento_tareas,
         'dias_activo': analisis.dias_activo,
-        'racha_actual': analisis.racha_actual,
-        'mejor_racha': analisis.mejor_racha,
         'habitos_metricas': habitos_metricas
     }
     
@@ -404,93 +432,98 @@ def generar_documento_analisis(request):
     )
     
     # Título del documento
-    story.append(Paragraph("Análisis de Hábitos - SoulTrack", title_style))
+    story.append(Paragraph("¡Bienvenido a tu informe de hábitos!", title_style))
     story.append(Spacer(1, 20))
-    
+
+    # Frase inspiradora inicial
+    story.append(Paragraph("Recuerda: 'El éxito es la suma de pequeños esfuerzos repetidos día tras día.'", normal_style))
+    story.append(Spacer(1, 20))
+
+    # Mensaje introductorio
+    story.append(Paragraph(f"¡Hola {user.username}! Este documento celebra tu constancia y dedicación. Cada paso cuenta y cada día suma. ¡Sigue avanzando con energía y optimismo!", normal_style))
+    story.append(Spacer(1, 20))
+
     # Información del usuario
-    story.append(Paragraph(f"Usuario: {user.username}", subtitle_style))
     story.append(Paragraph(f"Fecha del análisis: {today.strftime('%d/%m/%Y')}", normal_style))
     story.append(Spacer(1, 20))
-    
+
     # Resumen ejecutivo
-    story.append(Paragraph("Resumen Ejecutivo", subtitle_style))
+    story.append(Paragraph("¿Cómo vas en general?", subtitle_style))
     story.append(Paragraph(f"Rendimiento general: {analisis.rendimiento_general:.1f}%", normal_style))
-    story.append(Paragraph(f"Hábitos completados: {analisis.habitos_completados}/{analisis.total_habitos}", normal_style))
+    story.append(Paragraph(f"Días con hábitos completados: {analisis.habitos_completados}", normal_style))
     story.append(Paragraph(f"Días activo: {analisis.dias_activo}", normal_style))
-    story.append(Paragraph(f"Racha actual: {analisis.racha_actual} días", normal_style))
-    story.append(Paragraph(f"Mejor racha: {analisis.mejor_racha} días", normal_style))
     story.append(Spacer(1, 20))
-    
+
+    # Gráfica de barras de hábitos
+    if habitos_analisis:
+        from reportlab.graphics.shapes import Drawing, String, Rect
+        from reportlab.graphics.charts.barcharts import HorizontalBarChart
+        from reportlab.lib.colors import HexColor
+        story.append(Paragraph("Tu progreso en cada hábito (visual)", subtitle_style))
+        drawing = Drawing(400, 30 + 30 * len(habitos_analisis))
+        bar = HorizontalBarChart()
+        bar.x = 80
+        bar.y = 10
+        bar.height = 20 * len(habitos_analisis)
+        bar.width = 250
+        bar.data = [[habito['porcentaje'] for habito in habitos_analisis]]
+        bar.strokeColor = colors.black
+        bar.valueAxis.valueMin = 0
+        bar.valueAxis.valueMax = 100
+        bar.valueAxis.valueStep = 20
+        bar.categoryAxis.categoryNames = [habito['nombre'] for habito in habitos_analisis]
+        bar.bars[0].fillColor = HexColor('#2377af')
+        drawing.add(bar)
+        # Etiquetas de porcentaje
+        for i, habito in enumerate(habitos_analisis):
+            drawing.add(String(340, 20 * i + 15, f"{habito['porcentaje']}%", fontSize=10, fillColor=colors.black))
+        story.append(drawing)
+        story.append(Spacer(1, 20))
+
     # Análisis detallado de hábitos
     if habitos_analisis:
-        story.append(Paragraph("Análisis Detallado de Hábitos", subtitle_style))
-        
-        # Tabla de hábitos
-        table_data = [['Hábito', 'Completado', 'Meta', 'Porcentaje', 'Tendencia']]
-        
+        story.append(Paragraph("Tu progreso hábito por hábito", subtitle_style))
         for habito in habitos_analisis:
-            table_data.append([
-                habito['nombre'],
-                f"{habito['dias_completados']} días",
-                f"{habito['dias_totales']} días",
-                f"{habito['porcentaje']}%",
-                habito['tendencia']
-            ])
-        
-        table = Table(table_data, colWidths=[2*inch, 1*inch, 1*inch, 1*inch, 1.5*inch])
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#23AFAF')),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, 0), 12),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),
-            ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-            ('FONTSIZE', (0, 1), (-1, -1), 10),
-        ]))
-        
-        story.append(table)
-        story.append(Spacer(1, 20))
-    
-    # Recomendaciones
-    story.append(Paragraph("Recomendaciones", subtitle_style))
-    
-    if analisis.rendimiento_general < 60:
-        story.append(Paragraph("• Tu rendimiento general está por debajo del 60%. Te recomendamos:", normal_style))
-        story.append(Paragraph("  - Establecer metas más pequeñas y alcanzables", normal_style))
-        story.append(Paragraph("  - Crear recordatorios diarios para tus hábitos", normal_style))
-        story.append(Paragraph("  - Celebrar los pequeños logros", normal_style))
-    elif analisis.rendimiento_general < 80:
-        story.append(Paragraph("• Tu rendimiento es bueno. Para mejorarlo:", normal_style))
-        story.append(Paragraph("  - Mantén la consistencia en tus hábitos actuales", normal_style))
-        story.append(Paragraph("  - Considera agregar nuevos hábitos gradualmente", normal_style))
-        story.append(Paragraph("  - Revisa los hábitos que necesitan más atención", normal_style))
-    else:
-        story.append(Paragraph("• ¡Excelente rendimiento! Para mantenerlo:", normal_style))
-        story.append(Paragraph("  - Continúa con tu rutina actual", normal_style))
-        story.append(Paragraph("  - Considera desafíos más grandes", normal_style))
-        story.append(Paragraph("  - Comparte tu experiencia con otros", normal_style))
-    
-    if analisis.racha_actual < 7:
-        story.append(Paragraph("• Tu racha actual es corta. Para construir consistencia:", normal_style))
-        story.append(Paragraph("  - Enfócate en un hábito a la vez", normal_style))
-        story.append(Paragraph("  - Usa recordatorios visuales", normal_style))
-        story.append(Paragraph("  - Celebra cada día completado", normal_style))
-    
+            story.append(Paragraph(f"<b>{habito['nombre']}</b> - {habito['porcentaje']}% completado", normal_style))
+            if habito['porcentaje'] >= 80:
+                story.append(Paragraph("¡Increíble! Tu constancia es admirable. Sigue así, vas por el camino del éxito.", normal_style))
+            elif habito['porcentaje'] >= 50:
+                story.append(Paragraph("¡Muy bien! Vas por buen camino, cada día suma. Mantén el ritmo y verás grandes resultados.", normal_style))
+            else:
+                story.append(Paragraph("¡Ánimo! Cada pequeño avance cuenta. Lo importante es no rendirse y seguir intentándolo.", normal_style))
+            story.append(Spacer(1, 8))
     story.append(Spacer(1, 20))
-    
+
+    # Recomendaciones
+    story.append(Paragraph("¡Sigue creciendo!", subtitle_style))
+    if analisis.rendimiento_general < 60:
+        story.append(Paragraph("Recuerda que lo importante es no rendirse. Te sugerimos:", normal_style))
+        story.append(Paragraph("- Ponte metas pequeñas y celebra cada logro", normal_style))
+        story.append(Paragraph("- Usa recordatorios para no olvidar tus hábitos", normal_style))
+        story.append(Paragraph("- Comparte tus avances con alguien cercano", normal_style))
+    elif analisis.rendimiento_general < 80:
+        story.append(Paragraph("¡Vas por buen camino! Para seguir mejorando:", normal_style))
+        story.append(Paragraph("- Mantén tu ritmo y no te presiones", normal_style))
+        story.append(Paragraph("- Si puedes, suma un nuevo hábito sencillo", normal_style))
+        story.append(Paragraph("- Recuerda que cada día cuenta", normal_style))
+    else:
+        story.append(Paragraph("¡Felicidades! Tu esfuerzo se nota. Para mantenerlo:", normal_style))
+        story.append(Paragraph("- Sigue con tu rutina, vas genial", normal_style))
+        story.append(Paragraph("- Si quieres, desafíate con algo nuevo", normal_style))
+        story.append(Paragraph("- Inspira a otros con tu ejemplo", normal_style))
+    story.append(Spacer(1, 20))
+
     # Metas para el próximo período
-    story.append(Paragraph("Metas para el Próximo Período", subtitle_style))
-    story.append(Paragraph("Basándote en tu análisis actual, te sugerimos:", normal_style))
-    story.append(Paragraph(f"• Mantener una racha de al menos {max(7, analisis.racha_actual + 3)} días", normal_style))
-    story.append(Paragraph(f"• Mejorar el rendimiento general al {min(90, analisis.rendimiento_general + 10)}%", normal_style))
-    story.append(Paragraph("• Revisar y ajustar metas de hábitos problemáticos", normal_style))
-    story.append(Paragraph("• Documentar tu progreso diariamente", normal_style))
-    
+    story.append(Paragraph("¿Qué podrías intentar la próxima semana?", subtitle_style))
+    story.append(Paragraph("- Intenta sumar un día más de constancia", normal_style))
+    story.append(Paragraph("- Ajusta tus metas si lo necesitas, ¡no pasa nada!", normal_style))
+    story.append(Paragraph("- Recuerda que cada paso suma", normal_style))
     story.append(Spacer(1, 30))
-    
+
+    # Frase inspiradora final
+    story.append(Paragraph("'La constancia es el secreto del éxito. ¡Sigue brillando!'", normal_style))
+    story.append(Spacer(1, 10))
+
     # Pie de página
     footer_style = ParagraphStyle(
         'Footer',
@@ -499,8 +532,8 @@ def generar_documento_analisis(request):
         alignment=TA_CENTER,
         textColor=colors.grey
     )
-    story.append(Paragraph("Documento generado automáticamente por SoulTrack", footer_style))
-    story.append(Paragraph(f"Fecha de generación: {timezone.now().strftime('%d/%m/%Y %H:%M')}", footer_style))
+    story.append(Paragraph("Gracias por confiar en SoulTrack. ¡Tú puedes lograrlo!", footer_style))
+    story.append(Paragraph(f"Documento generado el {timezone.now().strftime('%d/%m/%Y %H:%M')}", footer_style))
     
     # Construir el documento
     doc.build(story)
@@ -508,8 +541,58 @@ def generar_documento_analisis(request):
     return response
 
 # Funciones auxiliares
+def validar_y_limpiar_datos(user):
+    """Validar y limpiar datos inconsistentes del usuario"""
+    today = timezone.now().date()
+    
+    # Verificar registros duplicados
+    registros_duplicados = RegistroHabito.objects.filter(
+        habito__user=user
+    ).values('habito', 'fecha').annotate(
+        count=models.Count('id')
+    ).filter(count__gt=1)
+    
+    if registros_duplicados.exists():
+        # Eliminar duplicados manteniendo solo el más reciente
+        for duplicado in registros_duplicados:
+            registros = RegistroHabito.objects.filter(
+                habito_id=duplicado['habito'],
+                fecha=duplicado['fecha']
+            ).order_by('-id')
+            
+            # Mantener solo el primer registro, eliminar los demás
+            for registro in registros[1:]:
+                registro.delete()
+    
+    # Verificar registros con fechas futuras
+    registros_futuros = RegistroHabito.objects.filter(
+        habito__user=user,
+        fecha__gt=today
+    )
+    
+    if registros_futuros.exists():
+        registros_futuros.delete()
+    
+    # Verificar hábitos sin registros pero marcados como completados
+    habitos_sin_registros = Actividad.objects.filter(
+        user=user,
+        tipo='habito',
+        estado='completado'
+    ).exclude(
+        registros__estado='completado'
+    )
+    
+    for habito in habitos_sin_registros:
+        habito.estado = 'pendiente'
+        habito.save()
+    
+    return True
+
 def actualizar_analisis_usuario(user):
     """Actualizar análisis completo del usuario considerando metas personalizadas"""
+    # Primero validar y limpiar datos
+    validar_y_limpiar_datos(user)
+    
     today = timezone.now().date()
     
     # Obtener hábitos y tareas
@@ -522,24 +605,35 @@ def actualizar_analisis_usuario(user):
     rendimiento_habitos = 0
     
     if total_habitos > 0:
+        progresos_habitos = []
         for habito in habitos:
             dias_completados = habito.registros.filter(estado='completado').count()
             dias_totales = habito.meta_dias if habito.meta_dias else 30
             
             # Calcular progreso basado en la meta personalizada
             progreso = (dias_completados / dias_totales * 100) if dias_totales > 0 else 0
+            progreso = min(progreso, 100)  # Limitar al 100%
+            
             habitos_completados += dias_completados
-            rendimiento_habitos += progreso
+            progresos_habitos.append(progreso)
         
-        rendimiento_habitos = rendimiento_habitos / total_habitos
+        # Calcular rendimiento promedio de hábitos
+        rendimiento_habitos = sum(progresos_habitos) / len(progresos_habitos) if progresos_habitos else 0
     
     # Calcular métricas de tareas
     total_tareas = tareas.count()
     tareas_completadas = tareas.filter(estado='completado').count()
     rendimiento_tareas = (tareas_completadas / total_tareas * 100) if total_tareas > 0 else 0
     
-    # Calcular rendimiento general
-    rendimiento_general = (rendimiento_habitos + rendimiento_tareas) / 2
+    # Calcular rendimiento general (promedio ponderado)
+    if total_habitos > 0 and total_tareas > 0:
+        rendimiento_general = (rendimiento_habitos + rendimiento_tareas) / 2
+    elif total_habitos > 0:
+        rendimiento_general = rendimiento_habitos
+    elif total_tareas > 0:
+        rendimiento_general = rendimiento_tareas
+    else:
+        rendimiento_general = 0
     
     # Calcular días activo y rachas
     dias_activo = calcular_dias_activo(user)
@@ -568,8 +662,6 @@ def actualizar_analisis_usuario(user):
             'tareas_completadas': tareas_completadas,
             'total_tareas': total_tareas,
             'dias_activo': dias_activo,
-            'racha_actual': racha_actual,
-            'mejor_racha': mejor_racha,
             'habitos_mejorar': habitos_mejorar
         }
     )
@@ -718,18 +810,20 @@ def generar_reporte_rendimiento(user, analisis):
     )
 
 def actualizar_comparacion_usuarios():
-    """Actualizar comparación de usuarios"""
+    """Actualizar comparación de rendimiento entre usuarios"""
     today = timezone.now().date()
     
-    # Obtener todos los análisis de hoy
-    analisis_usuarios = AnalisisUsuario.objects.filter(fecha_analisis=today)
+    # Obtener análisis de usuarios activos (últimos 30 días)
+    fecha_limite = today - timedelta(days=30)
+    analisis_usuarios = AnalisisUsuario.objects.filter(
+        fecha_analisis__gte=fecha_limite
+    ).select_related('user')
     
     if not analisis_usuarios.exists():
         return
     
-    # Calcular promedios
-    total_usuarios = analisis_usuarios.count()
-    usuarios_activos = analisis_usuarios.filter(dias_activo__gt=0).count()
+    # Calcular estadísticas generales
+    usuarios_activos = analisis_usuarios.values('user').distinct().count()
     
     promedio_rendimiento = analisis_usuarios.aggregate(
         avg_rendimiento=models.Avg('rendimiento_general')
@@ -782,7 +876,7 @@ def actualizar_comparacion_usuarios():
     
     # Actualizar comparación
     ComparacionUsuarios.objects.update_or_create(
-        fecha_comparacion=today,
+        fecha_analisis=today,
         defaults={
             'total_usuarios_activos': usuarios_activos,
             'promedio_rendimiento_general': promedio_rendimiento,
@@ -801,39 +895,109 @@ def calcular_dias_activo(user):
 
 def calcular_rachas(user):
     """Calcular racha actual y mejor racha"""
-    registros = RegistroHabito.objects.filter(
-        habito__user=user,
-        estado='completado'
-    ).order_by('fecha')
-    
-    if not registros.exists():
-        return 0, 0
-    
-    # Calcular racha actual
     today = timezone.now().date()
+    # Obtener todas las fechas en las que el usuario completó al menos un hábito
+    fechas_con_registro = (
+        RegistroHabito.objects.filter(
+            habito__user=user,
+            estado='completado'
+        )
+        .values_list('fecha', flat=True)
+        .distinct()
+    )
+    if not fechas_con_registro:
+        return 0, 0
+    fechas_ordenadas = sorted(fechas_con_registro)
+    # Calcular racha actual (hasta hoy)
     racha_actual = 0
     fecha_actual = today
-    
-    while True:
-        if registros.filter(fecha=fecha_actual).exists():
-            racha_actual += 1
-            fecha_actual -= timedelta(days=1)
-        else:
-            break
-    
-    # Calcular mejor racha
-    mejor_racha = 0
-    racha_temp = 0
-    fecha_anterior = None
-    
-    for registro in registros:
-        if fecha_anterior is None or (registro.fecha - fecha_anterior).days == 1:
+    while fecha_actual in fechas_ordenadas:
+        racha_actual += 1
+        fecha_actual -= timedelta(days=1)
+    # Calcular mejor racha histórica
+    mejor_racha = 1
+    racha_temp = 1
+    for i in range(1, len(fechas_ordenadas)):
+        if (fechas_ordenadas[i] - fechas_ordenadas[i-1]).days == 1:
             racha_temp += 1
         else:
             mejor_racha = max(mejor_racha, racha_temp)
             racha_temp = 1
-        fecha_anterior = registro.fecha
-    
     mejor_racha = max(mejor_racha, racha_temp)
-    
     return racha_actual, mejor_racha
+
+def detectar_errores_analisis(user):
+    """Detectar y reportar errores en el análisis de datos del usuario"""
+    errores = []
+    warnings = []
+    
+    today = timezone.now().date()
+    
+    # Verificar análisis existente
+    analisis = AnalisisUsuario.objects.filter(user=user).first()
+    if not analisis:
+        errores.append("No se encontró análisis para el usuario")
+        return errores, warnings
+    
+    # Verificar inconsistencias en rendimiento
+    if analisis.rendimiento_general > 100:
+        errores.append(f"Rendimiento general excede 100%: {analisis.rendimiento_general}%")
+    
+    if analisis.rendimiento_habitos > 100:
+        errores.append(f"Rendimiento de hábitos excede 100%: {analisis.rendimiento_habitos}%")
+    
+    if analisis.rendimiento_tareas > 100:
+        errores.append(f"Rendimiento de tareas excede 100%: {analisis.rendimiento_tareas}%")
+    
+    # Verificar hábitos vs registros
+    habitos = Actividad.objects.filter(user=user, tipo='habito')
+    total_registros = RegistroHabito.objects.filter(habito__user=user).count()
+    
+    if analisis.total_habitos != habitos.count():
+        warnings.append(f"Inconsistencia en conteo de hábitos: {analisis.total_habitos} vs {habitos.count()}")
+    
+    # Verificar rachas
+    if analisis.racha_actual > analisis.mejor_racha:
+        warnings.append("La racha actual es mayor que la mejor racha histórica")
+    
+    # Verificar días activo
+    dias_activo_calculado = calcular_dias_activo(user)
+    if analisis.dias_activo != dias_activo_calculado:
+        warnings.append(f"Inconsistencia en días activo: {analisis.dias_activo} vs {dias_activo_calculado}")
+    
+    # Verificar registros con fechas futuras
+    registros_futuros = RegistroHabito.objects.filter(
+        habito__user=user,
+        fecha__gt=today
+    )
+    
+    if registros_futuros.exists():
+        errores.append(f"Se encontraron {registros_futuros.count()} registros con fechas futuras")
+    
+    # Verificar registros duplicados
+    registros_duplicados = RegistroHabito.objects.filter(
+        habito__user=user
+    ).values('habito', 'fecha').annotate(
+        count=models.Count('id')
+    ).filter(count__gt=1)
+    
+    if registros_duplicados.exists():
+        errores.append(f"Se encontraron {registros_duplicados.count()} registros duplicados")
+    
+    return errores, warnings
+
+@login_required
+def reporte_errores_analisis(request):
+    """Vista para mostrar errores detectados en el análisis"""
+    user = request.user
+    errores, warnings = detectar_errores_analisis(user)
+    
+    context = {
+        'errores': errores,
+        'warnings': warnings,
+        'total_errores': len(errores),
+        'total_warnings': len(warnings),
+        'current_date': timezone.now().date()
+    }
+    
+    return render(request, 'data_analytics/error.html', context)

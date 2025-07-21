@@ -95,19 +95,6 @@
                     </span>
                 </div>
                 <div class="trend-item">
-                    <span class="trend-label">Racha Actual:</span>
-                    <span class="trend-value 
-                        {% if analisis.racha_actual >= 7 %}trend-positive
-                        {% elif analisis.racha_actual >= 3 %}trend-neutral
-                        {% else %}trend-negative{% endif %}">
-                        {{ analisis.racha_actual }} días
-                    </span>
-                </div>
-                <div class="trend-item">
-                    <span class="trend-label">Mejor Racha:</span>
-                    <span class="trend-value trend-positive">{{ analisis.mejor_racha }} días</span>
-                </div>
-                <div class="trend-item">
                     <span class="trend-label">Días Activo:</span>
                     <span class="trend-value trend-neutral">{{ analisis.dias_activo }} días</span>
                 </div>

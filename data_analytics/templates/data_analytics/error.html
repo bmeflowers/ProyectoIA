@@ -1,16 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Error - Análisis de Datos{% endblock %}
+{% block title %}Reporte de Errores - Análisis de Datos{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/analystic.css' %}">
 <style>
     .error-container {
-        max-width: 600px;
+        max-width: 800px;
         margin: 50px auto;
         padding: 40px;
-        text-align: center;
         background: rgba(255, 255, 255, 0.1);
         border-radius: 15px;
         backdrop-filter: blur(10px);
@@ -23,10 +22,23 @@
         color: #dc3545;
     }
     
+    .warning-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        color: #ffc107;
+    }
+    
+    .success-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        color: #28a745;
+    }
+    
     .error-title {
         color: white;
         font-size: 2rem;
         margin-bottom: 15px;
+        text-align: center;
     }
     
     .error-message {
@@ -34,6 +46,48 @@
         font-size: 1.1rem;
         line-height: 1.5;
         margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .errors-section, .warnings-section {
+        margin: 30px 0;
+        padding: 20px;
+        border-radius: 10px;
+    }
+    
+    .errors-section {
+        background: rgba(220, 53, 69, 0.1);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+    }
+    
+    .warnings-section {
+        background: rgba(255, 193, 7, 0.1);
+        border: 1px solid rgba(255, 193, 7, 0.3);
+    }
+    
+    .section-title {
+        color: white;
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .error-list, .warning-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .error-list li, .warning-list li {
+        color: rgba(255, 255, 255, 0.9);
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .error-list li:last-child, .warning-list li:last-child {
+        border-bottom: none;
     }
     
     .error-actions {
@@ -41,6 +95,7 @@
         gap: 15px;
         justify-content: center;
         flex-wrap: wrap;
+        margin-top: 30px;
     }
     
     .error-button {
@@ -66,17 +121,90 @@
     .back-button:hover {
         background: rgba(255, 255, 255, 0.2);
     }
+    
+    .summary-stats {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 15px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: white;
+    }
+    
+    .stat-label {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="error-container">
-    <div class="error-icon">⚠️</div>
-    <h1 class="error-title">Acceso Denegado</h1>
-    <p class="error-message">
-        {{ error|default:"No tienes permisos para acceder a esta funcionalidad. 
-        Esta sección está reservada para administradores del sistema." }}
-    </p>
+    {% if total_errores == 0 and total_warnings == 0 %}
+        <div class="success-icon">✅</div>
+        <h1 class="error-title">Análisis de Datos Correcto</h1>
+        <p class="error-message">
+            No se detectaron errores ni advertencias en tu análisis de datos. 
+            Todos los cálculos están funcionando correctamente.
+        </p>
+    {% else %}
+        <div class="error-icon">🔍</div>
+        <h1 class="error-title">Reporte de Errores de Análisis</h1>
+        <p class="error-message">
+            Se han detectado algunos problemas en el análisis de datos. 
+            Revisa los detalles a continuación.
+        </p>
+        
+        <div class="summary-stats">
+            <div class="stat-item">
+                <div class="stat-number">{{ total_errores }}</div>
+                <div class="stat-label">Errores Críticos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ total_warnings }}</div>
+                <div class="stat-label">Advertencias</div>
+            </div>
+        </div>
+        
+        {% if errores %}
+        <div class="errors-section">
+            <h3 class="section-title">
+                <span style="color: #dc3545;">⚠️</span>
+                Errores Críticos ({{ total_errores }})
+            </h3>
+            <ul class="error-list">
+                {% for error in errores %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+        {% if warnings %}
+        <div class="warnings-section">
+            <h3 class="section-title">
+                <span style="color: #ffc107;">⚠️</span>
+                Advertencias ({{ total_warnings }})
+            </h3>
+            <ul class="warning-list">
+                {% for warning in warnings %}
+                <li>{{ warning }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    {% endif %}
     
     <div class="error-actions">
         <a href="{% url 'data_analytics:dashboard' %}" class="error-button back-button">
@@ -84,6 +212,9 @@
         </a>
         <a href="{% url 'data_analytics:analisis_individual' %}" class="error-button">
             Análisis Individual
+        </a>
+        <a href="{% url 'data_analytics:dashboard_advanced' %}" class="error-button">
+            Análisis Avanzado
         </a>
     </div>
 </div>

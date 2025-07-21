@@ -11,4 +11,5 @@ urlpatterns = [
     path('comparacion/usuarios/', views.comparacion_usuarios, name='comparacion_usuarios'),
     path('api/metricas/', views.api_metricas_usuario, name='api_metricas'),
     path('generar-documento/', views.generar_documento_analisis, name='generar_documento'),
+    path('errores-analisis/', views.reporte_errores_analisis, name='reporte_errores'),
 ]

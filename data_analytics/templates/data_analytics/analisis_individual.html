@@ -45,14 +45,6 @@
                 <div class="summary-value">{{ analisis.dias_activo }}</div>
                 <div class="summary-label">Días Activo</div>
             </div>
-            <div class="summary-card">
-                <div class="summary-value">{{ analisis.racha_actual }}</div>
-                <div class="summary-label">Racha Actual</div>
-            </div>
-            <div class="summary-card">
-                <div class="summary-value">{{ analisis.mejor_racha }}</div>
-                <div class="summary-label">Mejor Racha</div>
-            </div>
         </div>
 
         <!-- Navegación -->
@@ -119,9 +111,8 @@
             <div class="habit-card">
                 <div class="habit-header">
                     <div class="habit-name">{{ habito.habito.nombre }}</div>
-                    <div class="habit-percentage">{{ habito.porcentaje|floatformat:1 }}%</div>
+                    <div class="habit-percentage" style="color: #2377af; font-weight: bold;">{{ habito.porcentaje|floatformat:1 }}%</div>
                 </div>
-                
                 <div class="habit-stats">
                     <div class="stat-item">
                         <div class="stat-value">{{ habito.dias_completados }}</div>
@@ -132,20 +123,24 @@
                         <div class="stat-label">Total de Días</div>
                     </div>
                 </div>
-                
-                <div class="trend-indicator 
-                    {% if habito.tendencia == 'mejorando' %}trend-improving
-                    {% elif habito.tendencia == 'estable' %}trend-stable
-                    {% elif habito.tendencia == 'empeorando' %}trend-declining
-                    {% else %}trend-new{% endif %}">
-                    {{ habito.tendencia|title }}
+                <div class="trend-indicator" style="font-size: 1.1rem; margin-top: 8px;">
+                    {% if habito.tendencia == 'mejorando' %}
+                        <span style="color: #28a745;">▲ Mejorando</span> 🚀
+                    {% elif habito.tendencia == 'estable' %}
+                        <span style="color: #2377af;">● Estable</span> 💪
+                    {% elif habito.tendencia == 'empeorando' %}
+                        <span style="color: #ffc107;">▼ Empeorando</span> 🌱
+                    {% endif %}
                 </div>
-                
-                {% if habito.necesita_mejora %}
-                <div style="color: #dc3545; font-size: 0.9rem; margin-top: 10px;">
-                    ⚠️ Necesita mejora
+                <div style="color: #2377af; font-size: 0.95rem; margin-top: 10px; font-weight: 500;">
+                    {% if habito.tendencia == 'mejorando' %}
+                        ¡Vas mejorando, sigue así! 🚀
+                    {% elif habito.tendencia == 'estable' %}
+                        ¡Mantén el ritmo, la constancia es clave! 💪
+                    {% elif habito.tendencia == 'empeorando' %}
+                        No te desanimes, cada día es una nueva oportunidad. 🌱
+                    {% endif %}
                 </div>
-                {% endif %}
             </div>
             {% endfor %}
         </div>

@@ -87,6 +87,22 @@ function guardarConversacion() {
 
 function cargarConversacion() {
     const chat = document.getElementById("chat-messages");
+
+    // Buscar cookie clear_chatbot
+    const cookies = document.cookie.split('; ').reduce((acc, current) => {
+        const [name, value] = current.split('=');
+        acc[name] = value;
+        return acc;
+    }, {});
+
+    if (cookies.clear_chatbot === '1') {
+        // Borrar la conversación guardada
+        localStorage.removeItem("chatbot_conversacion");
+
+        // Borrar la cookie para que no vuelva a borrar en la siguiente carga
+        document.cookie = "clear_chatbot=0; path=/";
+    }
+
     const conversacionGuardada = localStorage.getItem("chatbot_conversacion");
 
     if (conversacionGuardada) {
@@ -100,6 +116,7 @@ function cargarConversacion() {
 
     chat.scrollTop = chat.scrollHeight;
 }
+
 
 // Detectar tecla Enter para enviar
 document.getElementById("chat-input").addEventListener("keydown", function(event) {

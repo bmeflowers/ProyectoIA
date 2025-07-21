@@ -6,9 +6,11 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/analystic.css' %}">
+<link rel="stylesheet" href="{% static 'CSS/SeeleBot.css' %}">
 {% endblock %}
 
 {% block content %}
+{% include "SeeleBot.html" %}
 <div class="dashboard-container">
     <header class="dashboard-header">
         <div class="title-date">

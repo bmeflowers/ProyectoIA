@@ -38,12 +38,12 @@
                     <span class="nav-indicator"></span>
                 </a>
             </li>
-            <li class="nav-item">
+            <!--<li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.url_name == 'reminders' %}active{% endif %}" href="#">
                     <i class="fa-solid fa-bell"></i>
                     <span class="nav-indicator"></span>
                 </a>
-            </li>
+            </li>-->
             <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'edit_profile' %}active{% endif %}" href="{% url 'Users:profile' %}">
                     <i class="fa-solid fa-user"></i>

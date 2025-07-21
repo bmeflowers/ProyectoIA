@@ -42,13 +42,9 @@
         <div class="habits-section">
             <div class="habits-header d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h3>Hábitos</h3>
-                    <!-- Estado de hábitos -->
-                    <div class="habits-status">
-                        <small class="text-muted" style="color: #333 !important;">
-                            {{ habitos_completados }}/{{ total_habitos }} hábitos completados ({{ porcentaje_completado|floatformat:1 }}%)
-                        </small>
-                    </div>
+                    <h3>Hábitos
+                      <p class="text-muted">{{ habitos_completados }}/{{ total_habitos }} hábitos completados ({{ porcentaje_completado|floatformat:1 }}%)</p>
+                    </h3>
                 </div>
                 <div class="d-flex gap-2">
                     <!-- <button class="btn btn-sm btn-outline-primary" onclick="probarNotificacion()">
@@ -79,7 +75,7 @@
                         🎉 Celebración
                     </button> -->
                     <a href="{% url 'data_analytics:dashboard' %}" class="btn btn-sm btn-primary">Análisis</a>
-                    <a href="{% url 'data_analytics:generar_documento' %}" class="btn btn-sm btn-success">📄 PDF</a>
+                    <a href="{% url 'data_analytics:generar_documento' %}" class="btn btn-sm btn-primary">Informe</a>
                 </div>
             </div>
             

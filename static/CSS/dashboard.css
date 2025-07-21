@@ -188,8 +188,8 @@
     font-size: 1.5rem;
     font-weight: 700;
     color: #2A6F97;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    padding-bottom: 2px;
+    margin-bottom: 1px;
 }
 
 .tasks-section h3 {
@@ -226,7 +226,7 @@
 }
 
 .habits-list li:hover {
-    background-color: #1d4157;
+    background-color: #558aac;
     transform: translateY(-3px);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -340,19 +340,6 @@
     margin-bottom: 20px;
 }
 
-.progress {
-    height: 8px;
-    border-radius: 4px;
-    background-color: #dee2e6;
-    margin-bottom: 8px;
-}
-
-.progress-bar {
-    background-color: #007bff;
-    border-radius: 4px;
-    transition: width 0.6s ease;
-}
-
 /* Colores dinámicos para la barra de progreso */
 .progress-bar.excellent {
     background-color: #28a745 !important;
@@ -379,33 +366,33 @@
     border-radius: 8px;
     margin-bottom: 8px;
     transition: all 0.3s ease;
-    background: #E8F4F8;
-    border: 1px solid #8EAFAF;
-    color: #333;
+    background: #2A6F97;
+    border: 1px solid #ffffff;
+    color: #ffffff;
 }
 
 .habit-item.habit-pending {
-    border-left: 4px solid #ffc107;
-    background: #E8F4F8;
-    color: #333;
+    border-left: 4px solid #e9c65e;
+    background: #2A6F97;
+    color: #ffffff;
 }
 
 .habit-item:not(.habit-pending) {
-    border-left: 4px solid #28a745;
-    background: #E8F4F8;
-    color: #333;
+    border-left: 4px solid #63fc87;
+    background: #2A6F97;
+    color: #ffffff;
 }
 
 .habit-info {
     flex: 1;
     margin-left: 12px;
-    color: #333;
+    color: #ffffff;
 }
 
 .habit-name {
     font-weight: 500;
     margin-bottom: 2px;
-    color: #333;
+    color: #ffffff;
 }
 
 .habit-info small {
@@ -415,11 +402,11 @@
 }
 
 .text-warning {
-    color: #ffc107 !important;
+    color: #e9c65e !important;
 }
 
 .text-success {
-    color: #28a745 !important;
+    color: #63fc87 !important;
 }
 
 /* Estilos para cuando no hay hábitos */

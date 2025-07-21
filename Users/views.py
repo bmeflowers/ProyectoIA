@@ -37,7 +37,10 @@ def signup(request):
 
 def signout(request):
     logout(request)
-    return redirect('home')
+    response = redirect('home')
+    response.set_cookie('clear_chatbot', '1')
+    return response
+
 
 def signin(request):
     if request.method == 'GET':
@@ -61,7 +64,10 @@ def signin(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('dashboard')  # Cambiado a 'dashboard'
+                response = redirect('dashboard')
+                response.set_cookie('clear_chatbot', '1')
+                return response
+
             else:
                 return render(request, 'Users/signin.html', {
                     'form': form,

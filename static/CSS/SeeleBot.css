@@ -28,7 +28,7 @@
     bottom: 10px;
     right: 10px;
     width: 350px;
-    height: 430px;
+    height: 500px;
     background: #FFFFFF;
     border-radius: 8px;
     z-index: 1000;
@@ -87,9 +87,27 @@
 
 /* Área de mensajes */
 #chat-messages {
-    padding: 10px;
-    flex-grow: 1;
-    overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 500px; /* o el tamaño que quieras */
+}
+
+#chat-messages div {
+  margin: 5px 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  max-width: 80%;
+}
+
+.user-message {
+  background-color: #d1e7ff;
+  align-self: flex-end;
+}
+
+.bot-message {
+  background-color: #f0f0f0;
+  align-self: flex-start;
 }
 
 /* Entrada de mensaje */

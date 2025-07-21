@@ -6,161 +6,6 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/analystic.css' %}">
-<style>
-    .analytics-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-        margin-top: 20px;
-    }
-    
-    .metric-card {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
-        padding: 20px;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    .metric-value {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #23AFAF;
-        margin-bottom: 10px;
-    }
-    
-    .metric-label {
-        color: #333;
-        font-size: 1.1rem;
-        margin-bottom: 5px;
-        font-weight: 600;
-    }
-    
-    .metric-description {
-        color: #666;
-        font-size: 0.9rem;
-    }
-    
-    .performance-indicator {
-        display: inline-block;
-        padding: 5px 10px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: bold;
-        margin-left: 10px;
-    }
-    
-    .performance-excellent { background: #28a745; color: white; }
-    .performance-good { background: #ffc107; color: black; }
-    .performance-needs-improvement { background: #dc3545; color: white; }
-    
-    .habits-analysis {
-        margin-top: 30px;
-    }
-    
-    .habit-item {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-left: 4px solid #23AFAF;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    
-    .habit-name {
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 5px;
-    }
-    
-    .habit-progress {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .progress-bar {
-        flex: 1;
-        height: 8px;
-        background: rgba(0, 0, 0, 0.1);
-        border-radius: 4px;
-        overflow: hidden;
-    }
-    
-    .progress-fill {
-        height: 100%;
-        border-radius: 4px;
-        transition: width 0.3s ease;
-    }
-    
-    .progress-excellent { background: #28a745; }
-    .progress-good { background: #ffc107; }
-    .progress-needs-improvement { background: #dc3545; }
-    
-    .navigation-buttons {
-        display: flex;
-        gap: 15px;
-        margin-top: 20px;
-    }
-    
-    .nav-button {
-        background: #23AFAF;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 25px;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-    
-    .nav-button:hover {
-        background: #1a8a8a;
-        transform: translateY(-2px);
-    }
-    
-    .chart-title {
-        color: #333;
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-        text-align: center;
-        font-weight: 600;
-    }
-    
-    .dashboard-header {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    .dashboard-header h1 {
-        color: #333;
-        margin: 0;
-        font-size: 2rem;
-    }
-    
-    .dashboard-header .date {
-        color: #666;
-        margin: 5px 0 0 0;
-    }
-    
-    .user-info {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-    
-    .user-button {
-        color: #23AFAF;
-        text-decoration: none;
-        font-weight: 600;
-    }
-    
-    .user-button:hover {
-        color: #1a8a8a;
-    }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -225,6 +70,24 @@
         </div>
     </div>
 
+    <!-- Navegación -->
+    <div class="navigation-buttons">
+        <a href="{% url 'data_analytics:dashboard_advanced' %}" class="nav-button">
+            Análisis Avanzado
+        </a>
+        <a href="{% url 'data_analytics:analisis_individual' %}" class="nav-button">
+            Análisis Individual
+        </a>
+        <a href="{% url 'data_analytics:generar_documento' %}" class="nav-button" style="background: #28a745; color: white;">
+            Generar Documento
+        </a>
+        {% if user.is_staff %}
+        <a href="{% url 'data_analytics:comparacion_usuarios' %}" class="nav-button">
+            Comparación de Usuarios
+        </a>
+        {% endif %}
+    </div>
+
     <!-- Gráfico de hábitos -->
     <div id="habitChartContainer" style="margin: 30px auto; text-align: center; max-width: 800px;">
         <h2 class="chart-title">Análisis por Hábito</h2>
@@ -265,23 +128,6 @@
         {% endfor %}
     </div>
 
-    <!-- Navegación -->
-    <div class="navigation-buttons">
-        <a href="{% url 'data_analytics:dashboard_advanced' %}" class="nav-button">
-            Análisis Avanzado
-        </a>
-        <a href="{% url 'data_analytics:analisis_individual' %}" class="nav-button">
-            Análisis Individual
-        </a>
-        <a href="{% url 'data_analytics:generar_documento' %}" class="nav-button" style="background: #28a745; color: white;">
-            📄 Generar Documento
-        </a>
-        {% if user.is_staff %}
-        <a href="{% url 'data_analytics:comparacion_usuarios' %}" class="nav-button">
-            Comparación de Usuarios
-        </a>
-        {% endif %}
-    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

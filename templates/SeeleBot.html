@@ -16,6 +16,7 @@
             </svg>
         </span>
     </div>
+
     <div id="chat-messages"></div>
 
     <div class="chat-input-area">
@@ -45,22 +46,31 @@ function enviarMensaje() {
     const mensaje = input.value.trim();
     if (!mensaje) return;
 
+    const chat = document.getElementById("chat-messages");
+
+    const mensajeUsuario = document.createElement("div");
+    mensajeUsuario.textContent = "Tú: " + mensaje;
+    mensajeUsuario.classList.add("user-message");
+    chat.appendChild(mensajeUsuario);
+    chat.scrollTop = chat.scrollHeight;
+    guardarConversacion();
+
     fetch('/api/chatbot/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            
         },
         body: JSON.stringify({ mensaje })
     })
     .then(res => res.json())
     .then(data => {
-        const chat = document.getElementById("chat-messages");
         if (data.respuesta) {
             const respuesta = document.createElement("div");
             respuesta.textContent = "SeeleBot: " + data.respuesta;
+            respuesta.classList.add("bot-message");
             chat.appendChild(respuesta);
             chat.scrollTop = chat.scrollHeight;
+            guardarConversacion();
         } else if (data.error) {
             alert("Error: " + data.error);
         }
@@ -69,4 +79,38 @@ function enviarMensaje() {
 
     input.value = "";
 }
+
+function guardarConversacion() {
+    const chat = document.getElementById("chat-messages");
+    localStorage.setItem("chatbot_conversacion", chat.innerHTML);
+}
+
+function cargarConversacion() {
+    const chat = document.getElementById("chat-messages");
+    const conversacionGuardada = localStorage.getItem("chatbot_conversacion");
+
+    if (conversacionGuardada) {
+        chat.innerHTML = conversacionGuardada;
+    } else {
+        const bienvenida = document.createElement("div");
+        bienvenida.textContent = "SeeleBot: ¡Hola! 😊 Soy tu asistente de productividad. ¿En qué puedo ayudarte hoy?";
+        bienvenida.classList.add("bot-message");
+        chat.appendChild(bienvenida);
+    }
+
+    chat.scrollTop = chat.scrollHeight;
+}
+
+// Detectar tecla Enter para enviar
+document.getElementById("chat-input").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        enviarMensaje();
+    }
+});
+
+// Cargar la conversación al cargar la página
+document.addEventListener("DOMContentLoaded", () => {
+    cargarConversacion();
+});
 </script>

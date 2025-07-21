@@ -6,218 +6,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/analystic.css' %}">
-<style>
-    .advanced-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-    
-    .advanced-header {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 30px;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        text-align: center;
-    }
-    
-    .advanced-header h1 {
-        color: #333;
-        margin-bottom: 10px;
-        font-size: 2.5rem;
-    }
-    
-    .advanced-header p {
-        color: #666;
-        font-size: 1.1rem;
-    }
-    
-    .analysis-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 25px;
-        margin-bottom: 30px;
-    }
-    
-    .analysis-card {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
-        padding: 25px;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    .card-title {
-        color: #333;
-        font-size: 1.4rem;
-        margin-bottom: 20px;
-        border-bottom: 2px solid #23AFAF;
-        padding-bottom: 10px;
-    }
-    
-    .trend-analysis {
-        margin-bottom: 20px;
-    }
-    
-    .trend-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-    
-    .trend-item:last-child {
-        border-bottom: none;
-    }
-    
-    .trend-label {
-        color: #333;
-        font-weight: 500;
-    }
-    
-    .trend-value {
-        font-weight: bold;
-        font-size: 1.1rem;
-    }
-    
-    .trend-positive { color: #28a745; }
-    .trend-negative { color: #dc3545; }
-    .trend-neutral { color: #ffc107; }
-    
-    .recommendations-list {
-        list-style: none;
-        padding: 0;
-    }
-    
-    .recommendation-item {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 12px;
-        border-left: 4px solid #23AFAF;
-        transition: transform 0.3s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    
-    .recommendation-item:hover {
-        transform: translateX(5px);
-    }
-    
-    .recommendation-title {
-        color: #333;
-        font-weight: bold;
-        margin-bottom: 8px;
-        font-size: 1.1rem;
-    }
-    
-    .recommendation-desc {
-        color: #666;
-        font-size: 0.9rem;
-        line-height: 1.4;
-    }
-    
-    .priority-high { border-left-color: #dc3545; }
-    .priority-medium { border-left-color: #ffc107; }
-    .priority-low { border-left-color: #28a745; }
-    
-    .insights-section {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 30px;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    .insight-item {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 15px;
-        border-left: 4px solid #23AFAF;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    
-    .insight-title {
-        color: #333;
-        font-weight: bold;
-        margin-bottom: 10px;
-        font-size: 1.1rem;
-    }
-    
-    .insight-content {
-        color: #666;
-        line-height: 1.5;
-    }
-    
-    .chart-container {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 30px;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    .chart-title {
-        color: #333;
-        font-size: 1.4rem;
-        margin-bottom: 20px;
-        text-align: center;
-    }
-    
-    .navigation-buttons {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-        margin-top: 30px;
-    }
-    
-    .nav-button {
-        background: #23AFAF;
-        color: white;
-        padding: 12px 25px;
-        border-radius: 25px;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        font-weight: bold;
-    }
-    
-    .nav-button:hover {
-        background: #1a8a8a;
-        transform: translateY(-2px);
-    }
-    
-    .back-button {
-        background: rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(0, 0, 0, 0.3);
-        color: #333;
-    }
-    
-    .back-button:hover {
-        background: rgba(0, 0, 0, 0.2);
-    }
-    
-    .performance-indicator {
-        display: inline-block;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: bold;
-        margin-left: 10px;
-    }
-    
-    .performance-excellent { background: #28a745; color: white; }
-    .performance-good { background: #ffc107; color: black; }
-    .performance-needs-improvement { background: #dc3545; color: white; }
-</style>
+
 {% endblock %}
 
 {% block content %}
@@ -227,7 +16,23 @@
         <h1>Análisis Avanzado</h1>
         <p>Análisis detallado de rendimiento, tendencias y recomendaciones personalizadas</p>
         <p>Fecha: {% localize on %}{{ current_date|date:"d F Y" }}{% endlocalize %}</p>
+
+        <!-- Navegación -->
+        <div class="navigation-buttons">
+            <a href="{% url 'data_analytics:dashboard' %}" class="nav-button back-button">
+                ← Volver al Dashboard
+            </a>
+            <a href="{% url 'data_analytics:analisis_individual' %}" class="nav-button">
+                Análisis Individual
+            </a>
+            {% if user.is_staff %}
+            <a href="{% url 'data_analytics:comparacion_usuarios' %}" class="nav-button">
+                Comparación de Usuarios
+            </a>
+            {% endif %}
+        </div>
     </div>
+    
 
     <!-- Análisis de tendencias -->
     <div class="analysis-grid">
@@ -376,20 +181,7 @@
         </div>
     </div>
 
-    <!-- Navegación -->
-    <div class="navigation-buttons">
-        <a href="{% url 'data_analytics:dashboard' %}" class="nav-button back-button">
-            ← Volver al Dashboard
-        </a>
-        <a href="{% url 'data_analytics:analisis_individual' %}" class="nav-button">
-            Análisis Individual
-        </a>
-        {% if user.is_staff %}
-        <a href="{% url 'data_analytics:comparacion_usuarios' %}" class="nav-button">
-            Comparación de Usuarios
-        </a>
-        {% endif %}
-    </div>
+    
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

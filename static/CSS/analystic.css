@@ -2,8 +2,8 @@
 
 .dashboard-container {
     font-family: 'Jost', Arial, sans-serif;
-    max-width: 1200px;
-    margin: 30px;
+    max-width: 1600px;
+    margin: 30px auto;
     padding-left: 50px;
     padding-right: 50px;
     color: #333;
